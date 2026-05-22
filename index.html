@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MAX VIRAL HORROR</title>
+<title>DARK SIGNAL</title>
 
 <style>
 
@@ -21,7 +21,8 @@ body{
     color:white;
 }
 
-/* START */
+/* INTRO */
+
 .start{
     position:fixed;
     width:100%;
@@ -35,108 +36,34 @@ body{
 }
 
 .start h1{
-    margin-bottom:20px;
     color:red;
-    font-size:35px;
+    font-size:45px;
+    margin-bottom:20px;
     text-shadow:0 0 15px red;
 }
 
 .start button{
-    padding:18px 40px;
+    padding:18px 45px;
     border:none;
-    border-radius:12px;
+    border-radius:15px;
     background:red;
     color:white;
     font-size:22px;
     cursor:pointer;
+    box-shadow:0 0 20px red;
 }
 
-/* SHAKE */
-.shake{
-    animation:shake 0.08s infinite;
-}
+/* MAIN TEXT */
 
-@keyframes shake{
-    0%{transform:translate(0,0)}
-    25%{transform:translate(6px,-6px)}
-    50%{transform:translate(-6px,6px)}
-    75%{transform:translate(6px,6px)}
-    100%{transform:translate(0,0)}
-}
-
-/* FLASH */
-.flash{
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:red;
-    opacity:0;
-    pointer-events:none;
-    animation:flash 0.15s infinite;
-}
-
-@keyframes flash{
-    0%{opacity:0}
-    50%{opacity:0.2}
-    100%{opacity:0}
-}
-
-/* TEXT */
-.text{
+.center{
     position:absolute;
-    color:#ff0033;
-    font-size:38px;
-    font-weight:bold;
-    text-shadow:0 0 20px red;
-    animation:fade 1.5s forwards;
-}
-
-@keyframes fade{
-    0%{
-        opacity:0;
-        transform:scale(0.2) rotate(0deg);
-    }
-
-    20%{
-        opacity:1;
-        transform:scale(1.5) rotate(10deg);
-    }
-
-    100%{
-        opacity:0;
-        transform:scale(2.3) rotate(-10deg);
-    }
-}
-
-/* JUMPSCARE */
-.jump{
-    position:fixed;
     width:100%;
-    height:100%;
-    background:black;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:999;
-}
-
-.jump img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-/* VIRUS TEXT */
-.warning{
-    position:fixed;
-    bottom:20px;
-    width:100%;
+    top:40%;
     text-align:center;
-    color:red;
-    font-size:20px;
+    font-size:35px;
     font-weight:bold;
-    text-shadow:0 0 10px red;
-    animation:blink 0.3s infinite;
+    text-shadow:0 0 15px red;
+    animation:blink .4s infinite;
 }
 
 @keyframes blink{
@@ -145,36 +72,131 @@ body{
     100%{opacity:1}
 }
 
+/* NOTIFICATION */
+
+.note{
+    position:absolute;
+    left:20px;
+    right:20px;
+    background:#111;
+    border:1px solid red;
+    border-radius:14px;
+    padding:18px;
+    color:red;
+    font-size:22px;
+    box-shadow:0 0 15px red;
+    animation:popup .4s;
+}
+
+@keyframes popup{
+    from{
+        transform:translateY(40px);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+}
+
+/* SHAKE */
+
+.shake{
+    animation:shake .08s infinite;
+}
+
+@keyframes shake{
+    0%{transform:translate(0,0)}
+    25%{transform:translate(4px,-4px)}
+    50%{transform:translate(-4px,4px)}
+    75%{transform:translate(4px,4px)}
+    100%{transform:translate(0,0)}
+}
+
+/* VIRUS BAR */
+
+.scan{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:0%;
+    height:12px;
+    background:red;
+    box-shadow:0 0 20px red;
+}
+
+/* RED EYE */
+
+.eye{
+    position:fixed;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:red;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:
+    0 0 40px red,
+    0 0 80px red;
+    display:none;
+}
+
+.eye::after{
+    content:"";
+    position:absolute;
+    width:60px;
+    height:60px;
+    background:black;
+    border-radius:50%;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+
 </style>
 </head>
 
 <body>
 
 <!-- START -->
+
 <div class="start" id="start">
-    <h1>⚠ SYSTEM ERROR</h1>
-    <button onclick="startHorror()">OPEN</button>
+
+    <h1>DARK SIGNAL</h1>
+
+    <button onclick="startHorror()">
+        ENTER
+    </button>
+
 </div>
 
-<!-- FLASH -->
-<div class="flash"></div>
+<!-- CENTER TEXT -->
 
-<!-- JUMPSCARE -->
-<div class="jump" id="jump">
-    <img src="https://i.imgur.com/4m7DTkF.jpeg">
+<div class="center" id="centerText">
 </div>
 
-<!-- WARNING -->
-<div class="warning">
-    ⚠ VIRUS DETECTED ⚠
-</div>
+<!-- SCAN BAR -->
 
-<!-- AUDIO -->
-<audio id="audio" loop>
-    <source src="scary.mp3" type="audio/mpeg">
-</audio>
+<div class="scan" id="scan"></div>
+
+<!-- RED EYE -->
+
+<div class="eye" id="eye"></div>
 
 <script>
+
+const messages = [
+
+"📍 UNKNOWN SIGNAL FOUND",
+"⚠ DARK CONNECTION ACTIVE",
+"👁 ENTITY DETECTED",
+"🩸 DON'T TURN AROUND",
+"🚪 Qapını açma",
+"👁 Səni görürəm",
+"⚠ Arxana bax"
+
+];
 
 function startHorror(){
 
@@ -182,63 +204,127 @@ function startHorror(){
 
     document.body.classList.add("shake");
 
-    // SOUND
-    document.getElementById("audio").play();
-
-    // FULLSCREEN
-    if(document.documentElement.requestFullscreen){
-        document.documentElement.requestFullscreen();
-    }
-
-    // VIBRATION
     if(navigator.vibrate){
-        navigator.vibrate([400,100,400,100,800]);
+        navigator.vibrate([300,100,300,100,700]);
     }
 
-    // TEXT SPAM
-    setInterval(spawnText, 50);
+    // fake location
+    showCenter(
+    "📍 LOCATION: "
+    + randomCoord()
+    );
 
-    // RANDOM JUMPSCARE
-    setInterval(showJump, 5000);
+    // notifications
+    setInterval(spawnNote,1200);
+
+    // fake scanner
+    fakeScan();
+
+    // blackout + eye
+    setTimeout(()=>{
+        blackout();
+    },12000);
 }
 
-function spawnText(){
+function randomCoord(){
 
-    const el = document.createElement("div");
+    let a =
+    (Math.random()*180-90).toFixed(5);
 
-    el.className = "text";
+    let b =
+    (Math.random()*360-180).toFixed(5);
 
-    el.innerText = "Əlivə Verim";
+    return a + ", " + b;
+}
 
-    el.style.left = Math.random() * window.innerWidth + "px";
+function showCenter(txt){
 
-    el.style.top = Math.random() * window.innerHeight + "px";
+    const c =
+    document.getElementById("centerText");
+
+    c.innerText = txt;
+}
+
+function spawnNote(){
+
+    const el =
+    document.createElement("div");
+
+    el.className = "note";
+
+    el.innerText =
+    messages[
+    Math.floor(Math.random()*messages.length)
+    ];
+
+    el.style.top =
+    Math.random() *
+    (window.innerHeight-120)
+    + "px";
 
     document.body.appendChild(el);
 
     setTimeout(()=>{
         el.remove();
-    },1500);
+    },3000);
 
-    // vibration spam
     if(navigator.vibrate){
-        navigator.vibrate(60);
+        navigator.vibrate(80);
     }
 }
 
-function showJump(){
+function fakeScan(){
 
-    const jump = document.getElementById("jump");
+    let width = 0;
 
-    jump.style.display = "flex";
+    const bar =
+    document.getElementById("scan");
+
+    const interval =
+    setInterval(()=>{
+
+        width += 1;
+
+        bar.style.width =
+        width + "%";
+
+        showCenter(
+        "⚠ " + width +
+        "% SCANNING..."
+        );
+
+        if(width >= 100){
+
+            clearInterval(interval);
+
+            showCenter(
+            "⚠ 12 THREATS FOUND"
+            );
+        }
+
+    },80);
+}
+
+function blackout(){
+
+    document.body.innerHTML = "";
+
+    document.body.style.background = "black";
+
+    const eye =
+    document.createElement("div");
+
+    eye.className = "eye";
+
+    document.body.appendChild(eye);
+
+    eye.style.display = "block";
 
     if(navigator.vibrate){
-        navigator.vibrate([300,100,300,100,1000]);
+        navigator.vibrate(
+        [400,100,400,100,1000]
+        );
     }
-
-    setTimeout(()=>{
-        jump.style.display = "none";
-    },1200);
 }
 
 </script>
