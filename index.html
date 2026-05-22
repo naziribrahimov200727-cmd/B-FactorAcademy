@@ -4,47 +4,145 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Horror FIXED</title>
+<title>MAX VIRAL HORROR</title>
 
 <style>
 
-body{
+*{
     margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
     background:black;
     overflow:hidden;
-    animation:shake 0.1s infinite;
+    color:white;
+}
+
+/* START */
+.start{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:9999;
+}
+
+.start h1{
+    margin-bottom:20px;
+    color:red;
+    font-size:35px;
+    text-shadow:0 0 15px red;
+}
+
+.start button{
+    padding:18px 40px;
+    border:none;
+    border-radius:12px;
+    background:red;
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+}
+
+/* SHAKE */
+.shake{
+    animation:shake 0.08s infinite;
 }
 
 @keyframes shake{
     0%{transform:translate(0,0)}
-    25%{transform:translate(3px,-3px)}
-    50%{transform:translate(-3px,3px)}
-    75%{transform:translate(3px,3px)}
+    25%{transform:translate(6px,-6px)}
+    50%{transform:translate(-6px,6px)}
+    75%{transform:translate(6px,6px)}
     100%{transform:translate(0,0)}
 }
 
-.text{
-    position:absolute;
-    color:red;
-    font-size:30px;
-    font-weight:bold;
-    text-shadow:0 0 10px red;
-    animation:fade 1.5s forwards;
-}
-
-@keyframes fade{
-    0%{opacity:0;transform:scale(0.3)}
-    20%{opacity:1;transform:scale(1.3)}
-    100%{opacity:0;transform:scale(2)}
-}
-
+/* FLASH */
 .flash{
     position:fixed;
     width:100%;
     height:100%;
     background:red;
-    opacity:0.08;
+    opacity:0;
     pointer-events:none;
+    animation:flash 0.15s infinite;
+}
+
+@keyframes flash{
+    0%{opacity:0}
+    50%{opacity:0.2}
+    100%{opacity:0}
+}
+
+/* TEXT */
+.text{
+    position:absolute;
+    color:#ff0033;
+    font-size:38px;
+    font-weight:bold;
+    text-shadow:0 0 20px red;
+    animation:fade 1.5s forwards;
+}
+
+@keyframes fade{
+    0%{
+        opacity:0;
+        transform:scale(0.2) rotate(0deg);
+    }
+
+    20%{
+        opacity:1;
+        transform:scale(1.5) rotate(10deg);
+    }
+
+    100%{
+        opacity:0;
+        transform:scale(2.3) rotate(-10deg);
+    }
+}
+
+/* JUMPSCARE */
+.jump{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:black;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.jump img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* VIRUS TEXT */
+.warning{
+    position:fixed;
+    bottom:20px;
+    width:100%;
+    text-align:center;
+    color:red;
+    font-size:20px;
+    font-weight:bold;
+    text-shadow:0 0 10px red;
+    animation:blink 0.3s infinite;
+}
+
+@keyframes blink{
+    0%{opacity:1}
+    50%{opacity:0}
+    100%{opacity:1}
 }
 
 </style>
@@ -52,24 +150,96 @@ body{
 
 <body>
 
+<!-- START -->
+<div class="start" id="start">
+    <h1>⚠ SYSTEM ERROR</h1>
+    <button onclick="startHorror()">OPEN</button>
+</div>
+
+<!-- FLASH -->
 <div class="flash"></div>
+
+<!-- JUMPSCARE -->
+<div class="jump" id="jump">
+    <img src="https://i.imgur.com/4m7DTkF.jpeg">
+</div>
+
+<!-- WARNING -->
+<div class="warning">
+    ⚠ VIRUS DETECTED ⚠
+</div>
+
+<!-- AUDIO -->
+<audio id="audio" loop>
+    <source src="scary.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 
-function spawn(){
+function startHorror(){
+
+    document.getElementById("start").style.display = "none";
+
+    document.body.classList.add("shake");
+
+    // SOUND
+    document.getElementById("audio").play();
+
+    // FULLSCREEN
+    if(document.documentElement.requestFullscreen){
+        document.documentElement.requestFullscreen();
+    }
+
+    // VIBRATION
+    if(navigator.vibrate){
+        navigator.vibrate([400,100,400,100,800]);
+    }
+
+    // TEXT SPAM
+    setInterval(spawnText, 50);
+
+    // RANDOM JUMPSCARE
+    setInterval(showJump, 5000);
+}
+
+function spawnText(){
+
     const el = document.createElement("div");
+
     el.className = "text";
+
     el.innerText = "Əlivə Verim";
 
     el.style.left = Math.random() * window.innerWidth + "px";
+
     el.style.top = Math.random() * window.innerHeight + "px";
 
     document.body.appendChild(el);
 
-    setTimeout(()=>el.remove(),1500);
+    setTimeout(()=>{
+        el.remove();
+    },1500);
+
+    // vibration spam
+    if(navigator.vibrate){
+        navigator.vibrate(60);
+    }
 }
 
-setInterval(spawn, 80);
+function showJump(){
+
+    const jump = document.getElementById("jump");
+
+    jump.style.display = "flex";
+
+    if(navigator.vibrate){
+        navigator.vibrate([300,100,300,100,1000]);
+    }
+
+    setTimeout(()=>{
+        jump.style.display = "none";
+    },1200);
+}
 
 </script>
 
