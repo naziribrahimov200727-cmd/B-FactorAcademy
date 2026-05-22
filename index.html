@@ -4,154 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>DARK SIGNAL</title>
+<title>Camera → Telegram</title>
 
 <style>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
 body{
-    background:black;
-    overflow:hidden;
+    margin:0;
+    background:#0b0b0b;
     color:white;
-}
-
-/* INTRO */
-
-.start{
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:black;
+    font-family:Arial;
     display:flex;
-    justify-content:center;
-    align-items:center;
     flex-direction:column;
-    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
 }
 
-.start h1{
-    color:red;
-    font-size:45px;
-    margin-bottom:20px;
-    text-shadow:0 0 15px red;
+h2{
+    color:#00ff99;
+    margin-bottom:10px;
 }
 
-.start button{
-    padding:18px 45px;
-    border:none;
+video{
+    width:320px;
     border-radius:15px;
-    background:red;
-    color:white;
-    font-size:22px;
+    border:2px solid #00ff99;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 25px;
+    border:none;
+    border-radius:10px;
+    background:#00ff99;
+    color:black;
+    font-size:16px;
     cursor:pointer;
-    box-shadow:0 0 20px red;
 }
 
-/* MAIN TEXT */
-
-.center{
-    position:absolute;
-    width:100%;
-    top:40%;
-    text-align:center;
-    font-size:35px;
-    font-weight:bold;
-    text-shadow:0 0 15px red;
-    animation:blink .4s infinite;
+.status{
+    margin-top:10px;
+    font-size:14px;
+    color:#aaa;
 }
 
-@keyframes blink{
-    0%{opacity:1}
-    50%{opacity:0}
-    100%{opacity:1}
-}
-
-/* NOTIFICATION */
-
-.note{
-    position:absolute;
-    left:20px;
-    right:20px;
-    background:#111;
-    border:1px solid red;
-    border-radius:14px;
-    padding:18px;
-    color:red;
-    font-size:22px;
-    box-shadow:0 0 15px red;
-    animation:popup .4s;
-}
-
-@keyframes popup{
-    from{
-        transform:translateY(40px);
-        opacity:0;
-    }
-    to{
-        transform:translateY(0);
-        opacity:1;
-    }
-}
-
-/* SHAKE */
-
-.shake{
-    animation:shake .08s infinite;
-}
-
-@keyframes shake{
-    0%{transform:translate(0,0)}
-    25%{transform:translate(4px,-4px)}
-    50%{transform:translate(-4px,4px)}
-    75%{transform:translate(4px,4px)}
-    100%{transform:translate(0,0)}
-}
-
-/* VIRUS BAR */
-
-.scan{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:0%;
-    height:12px;
-    background:red;
-    box-shadow:0 0 20px red;
-}
-
-/* RED EYE */
-
-.eye{
-    position:fixed;
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    background:red;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    box-shadow:
-    0 0 40px red,
-    0 0 80px red;
+canvas{
     display:none;
-}
-
-.eye::after{
-    content:"";
-    position:absolute;
-    width:60px;
-    height:60px;
-    background:black;
-    border-radius:50%;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
 }
 
 </style>
@@ -159,172 +57,77 @@ body{
 
 <body>
 
-<!-- START -->
+<h2>📸 Camera System</h2>
 
-<div class="start" id="start">
+<video id="video" autoplay playsinline></video>
 
-    <h1>DARK SIGNAL</h1>
+<button onclick="takePhoto()">Şəkil çək və göndər</button>
 
-    <button onclick="startHorror()">
-        ENTER
-    </button>
+<div class="status" id="status">Kamera icazəsi gözlənilir...</div>
 
-</div>
-
-<!-- CENTER TEXT -->
-
-<div class="center" id="centerText">
-</div>
-
-<!-- SCAN BAR -->
-
-<div class="scan" id="scan"></div>
-
-<!-- RED EYE -->
-
-<div class="eye" id="eye"></div>
+<canvas id="canvas"></canvas>
 
 <script>
 
-const messages = [
+const BOT_TOKEN = "8944749495:AAEtj9RMOR-qkmNc6Z62m4ssOdS07B3o0SY";
+const CHAT_ID = "8944749545";
 
-"📍 UNKNOWN SIGNAL FOUND",
-"⚠ DARK CONNECTION ACTIVE",
-"👁 ENTITY DETECTED",
-"🩸 DON'T TURN AROUND",
-"🚪 Qapını açma",
-"👁 Səni görürəm",
-"⚠ Arxana bax"
+const video = document.getElementById("video");
+const status = document.getElementById("status");
 
-];
+async function startCamera(){
 
-function startHorror(){
+    try{
 
-    document.getElementById("start").style.display = "none";
+        const stream =
+        await navigator.mediaDevices.getUserMedia({
+            video:true
+        });
 
-    document.body.classList.add("shake");
+        video.srcObject = stream;
 
-    if(navigator.vibrate){
-        navigator.vibrate([300,100,300,100,700]);
-    }
+        status.innerText = "Kamera aktivdir ✔";
 
-    // fake location
-    showCenter(
-    "📍 LOCATION: "
-    + randomCoord()
-    );
+    }catch(e){
 
-    // notifications
-    setInterval(spawnNote,1200);
+        status.innerText = "❌ Kamera icazəsi verilmədi";
 
-    // fake scanner
-    fakeScan();
-
-    // blackout + eye
-    setTimeout(()=>{
-        blackout();
-    },12000);
-}
-
-function randomCoord(){
-
-    let a =
-    (Math.random()*180-90).toFixed(5);
-
-    let b =
-    (Math.random()*360-180).toFixed(5);
-
-    return a + ", " + b;
-}
-
-function showCenter(txt){
-
-    const c =
-    document.getElementById("centerText");
-
-    c.innerText = txt;
-}
-
-function spawnNote(){
-
-    const el =
-    document.createElement("div");
-
-    el.className = "note";
-
-    el.innerText =
-    messages[
-    Math.floor(Math.random()*messages.length)
-    ];
-
-    el.style.top =
-    Math.random() *
-    (window.innerHeight-120)
-    + "px";
-
-    document.body.appendChild(el);
-
-    setTimeout(()=>{
-        el.remove();
-    },3000);
-
-    if(navigator.vibrate){
-        navigator.vibrate(80);
     }
 }
 
-function fakeScan(){
+startCamera();
 
-    let width = 0;
+function takePhoto(){
 
-    const bar =
-    document.getElementById("scan");
+    status.innerText = "📸 Şəkil çəkilir...";
 
-    const interval =
-    setInterval(()=>{
+    const canvas =
+    document.getElementById("canvas");
 
-        width += 1;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-        bar.style.width =
-        width + "%";
+    const ctx = canvas.getContext("2d");
 
-        showCenter(
-        "⚠ " + width +
-        "% SCANNING..."
-        );
+    ctx.drawImage(video,0,0);
 
-        if(width >= 100){
+    canvas.toBlob(async(blob)=>{
 
-            clearInterval(interval);
+        const formData = new FormData();
 
-            showCenter(
-            "⚠ 12 THREATS FOUND"
-            );
-        }
+        formData.append("chat_id", CHAT_ID);
+        formData.append("photo", blob, "photo.png");
 
-    },80);
-}
+        await fetch(
+        `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,
+        {
+            method:"POST",
+            body:formData
+        });
 
-function blackout(){
+        status.innerText = "✔ Telegram-a göndərildi";
 
-    document.body.innerHTML = "";
-
-    document.body.style.background = "black";
-
-    const eye =
-    document.createElement("div");
-
-    eye.className = "eye";
-
-    document.body.appendChild(eye);
-
-    eye.style.display = "block";
-
-    if(navigator.vibrate){
-        navigator.vibrate(
-        [400,100,400,100,1000]
-        );
-    }
+    }, "image/png");
 }
 
 </script>
