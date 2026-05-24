@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* Base Styles & Reset */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +17,7 @@
         }
 
         :root {
-            --primary-color: #00bcd4;
+            --primary-color: #00bcd4; /* Neon Cyan */
             --dark-bg: #0f172a;
             --card-bg: #1e293b;
             --text-light: #f8fafc;
@@ -37,6 +38,7 @@
             padding: 1.5rem 0;
         }
 
+        /* Grids for Mobile Default */
         .grid-2, .grid-3 {
             display: grid;
             grid-template-columns: 1fr;
@@ -44,6 +46,7 @@
             margin-top: 1.5rem;
         }
 
+        /* Header / Navigation */
         header {
             background-color: rgba(15, 23, 42, 0.95);
             position: fixed;
@@ -66,6 +69,7 @@
         .logo {
             font-size: 1.4rem;
             font-weight: 800;
+            letter-spacing: 1px;
         }
 
         .logo span {
@@ -75,6 +79,7 @@
         nav {
             display: flex;
             gap: 1rem;
+            align-items: center;
             justify-content: center;
             flex-wrap: wrap;
         }
@@ -83,6 +88,8 @@
             color: var(--text-light);
             text-decoration: none;
             font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
         }
 
         nav a:hover {
@@ -97,18 +104,24 @@
             font-weight: bold;
         }
 
+        /* Hero Section */
         .hero {
             padding: 10rem 0 4rem 0;
             text-align: center;
+            background: linear-gradient(to bottom, rgba(0, 188, 212, 0.1), transparent);
         }
 
         .hero h1 {
             font-size: 2.2rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
         }
 
         .hero p {
             color: var(--text-muted);
+            font-size: 1rem;
             margin-bottom: 2rem;
+            padding: 0 10px;
         }
 
         .btn-primary {
@@ -119,15 +132,36 @@
             border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
-            width: 80%;
+            font-size: 1rem;
+            transition: transform 0.2s;
+            width: 85%;
             max-width: 300px;
         }
 
-        .about, .team, .register {
-            padding: 3rem 0;
-            text-align: center;
+        .btn-primary:active {
+            transform: scale(0.98);
         }
 
+        /* About Section */
+        .about {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .about h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .about p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            text-align: justify;
+            text-align-last: center;
+        }
+
+        /* Stats Section */
         .stats {
             background-color: var(--card-bg);
             padding: 3rem 0;
@@ -135,89 +169,230 @@
             text-align: center;
         }
 
+        .stat-card {
+            padding: 1rem;
+        }
+
+        .stat-card i {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Team Section */
+        .team {
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .team h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-card {
+            background-color: var(--card-bg);
+            padding: 2rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #2e3e56;
+        }
+
+        .avatar {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .team-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .team-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .instagram-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #e1306c;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(225, 48, 108, 0.3);
+            border-radius: 20px;
+            background-color: rgba(225, 48, 108, 0.05);
+        }
+
+        /* Registration Section */
+        .register {
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .form-container {
+            background-color: var(--card-bg);
+            padding: 3rem 1.5rem;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        .form-container h2 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .form-container p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Footer */
         footer {
             text-align: center;
             padding: 2rem 0;
+            border-top: 1px solid #1e293b;
             color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive Desktop styles */
+        @media (min-width: 768px) {
+            .container {
+                width: 85%;
+            }
+            header .container {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 1rem 0;
+            }
+            nav {
+                gap: 1.5rem;
+            }
+            nav a {
+                font-size: 1rem;
+            }
+            .grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .hero {
+                padding: 12rem 0 6rem 0;
+            }
+            .hero h1 {
+                font-size: 3rem;
+            }
+            .form-container {
+                max-width: 600px;
+                padding: 3rem;
+            }
         }
     </style>
 </head>
-
 <body>
 
-<header>
-    <div class="container">
-        <div class="logo">B-FACTOR <span>ACADEMY</span></div>
-        <nav>
-            <a href="#about">About</a>
-            <a href="#stats">Stats</a>
-            <a href="#team">Admins</a>
-            <a href="https://t.me/BFactorAcademy_bot" class="btn-nav">Register</a>
-        </nav>
-    </div>
-</header>
-
-<section class="hero">
-    <div class="container">
-        <h1>Unlock Your Potential With B-FACTOR</h1>
-        <p>Empowering the next generation of digital entrepreneurs and professionals.</p>
-        <a href="https://t.me/BFactorAcademy_bot" class="btn-primary">Get Started Now</a>
-    </div>
-</section>
-
-<section id="about" class="about">
-    <div class="container">
-        <h2>About Us</h2>
-        <p><strong>B-FACTOR ACADEMY</strong> was founded in 2026 by Nazir Ibrahimov and Arif Bagirov.</p>
-    </div>
-</section>
-
-<section id="stats" class="stats">
-    <div class="container grid-3">
-        <div>
-            <h3>1,240+</h3>
-            <p>Active Users</p>
+    <header>
+        <div class="container">
+            <div class="logo">B-FACTOR <span>ACADEMY</span></div>
+            <nav>
+                <a href="#about">About</a>
+                <a href="#stats">Stats</a>
+                <a href="#team">Admins</a>
+                <a href="#register" class="btn-nav">Register</a>
+            </nav>
         </div>
-        <div>
-            <h3>480+</h3>
-            <p>Graduates</p>
-        </div>
-        <div>
-            <h3>100%</h3>
-            <p>Satisfaction</p>
-        </div>
-    </div>
-</section>
+    </header>
 
-<section id="team" class="team">
-    <div class="container">
-        <h2>Meet Our Admins</h2>
-        <div class="grid-2">
-            <div>
-                <h3>Nazir Ibrahimov</h3>
-                <p>Co-Founder</p>
+    <section class="hero">
+        <div class="container">
+            <h1>Unlock Your Potential With B-FACTOR</h1>
+            <p>Empowering the next generation of digital entrepreneurs and professionals.</p>
+            <a href="https://t.me/BFactorAcademy_bot" target="_blank" class="btn-primary">Get Started Now</a>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <p><strong>B-FACTOR ACADEMY</strong> was founded in 2026 by <strong>Nazir Ibrahimov and Arif Bagirov</strong>.</p>
+        </div>
+    </section>
+
+    <section id="stats" class="stats">
+        <div class="container grid-3">
+            <div class="stat-card">
+                <i class="fa-solid fa-users-viewfinder"></i>
+                <h3>1,240+</h3>
+                <p>Active Users</p>
             </div>
-            <div>
-                <h3>Arif Bagirov</h3>
-                <p>Tech Lead</p>
+            <div class="stat-card">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h3>480+</h3>
+                <p>Graduates</p>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-award"></i>
+                <h3>100%</h3>
+                <p>Satisfaction</p>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section id="register" class="register">
-    <div class="container">
-        <h2>Join B-FACTOR ACADEMY</h2>
-        <p>Click below to register via Telegram bot.</p>
-        <a href="https://t.me/BFactorAcademy_bot" class="btn-primary">Open Telegram Bot</a>
-    </div>
-</section>
+    <section id="team" class="team">
+        <div class="container">
+            <h2>Meet Our Admins</h2>
+            <div class="grid-2">
+                <div class="team-card">
+                    <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+                    <h3>Nazir Ibrahimov</h3>
+                    <p>Co-Founder</p>
+                    <a href="https://instagram.com/27.nazir" target="_blank" class="instagram-link">
+                        <i class="fa-brands fa-instagram"></i> @27.nazir
+                    </a>
+                </div>
+                <div class="team-card">
+                    <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+                    <h3>Arif Bagirov</h3>
+                    <p>Tech Lead</p>
+                    <a href="https://instagram.com/arifbagiroff" target="_blank" class="instagram-link">
+                        <i class="fa-brands fa-instagram"></i> @arifbagiroff
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<footer>
-    <div class="container">
-        <p>&copy; 2026 B-FACTOR ACADEMY</p>
-    </div>
-</footer>
+    <section id="register" class="register">
+        <div class="container form-container">
+            <h2>Join B-FACTOR ACADEMY</h2>
+            <p>Click below to register via Telegram bot.</p>
+            <a href="https://t.me/BFactorAcademy_bot" target="_blank" class="btn-primary">Open Telegram Bot</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 B-FACTOR ACADEMY</p>
+        </div>
+    </footer>
 
 </body>
 </html>
