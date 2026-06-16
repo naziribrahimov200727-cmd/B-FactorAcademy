@@ -2,31 +2,232 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXA - Giriş və Qeydiyyat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXA - Azərbaycanın Rəqəmsal Evi</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
     <style>
-        body { background: #030712; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { width: 90%; max-width: 320px; background: #0b1329; padding: 25px; border-radius: 20px; border: 1px solid #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #111c44; border: 1px solid #3b82f6; color: white; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #3b82f6; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        /* --- Qlobal Dizayn və Premium Cyber Mövzu --- */
+        :root {
+            --bg-main: #020512;
+            --bg-box: #0b122c;
+            --bg-input: #101b42;
+            --accent-blue: #3b82f6;
+            --accent-glow: #00d2ff;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: '-apple-system', BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background: var(--bg-main); color: var(--text-color); display: flex; justify-content: center; background-image: radial-gradient(circle at 50% 10%, #111e4a 0%, var(--bg-main) 70%); min-height: 100vh; overflow-x: hidden; }
+
+        /* Mobil Çərçivə Ekranı */
+        .phone-container { width: 100%; max-width: 430px; height: 100vh; background: var(--bg-main); position: relative; display: flex; flex-direction: column; border-left: 1px solid #1e293b; border-right: 1px solid #1e293b; box-shadow: 0 0 40px rgba(0, 210, 255, 0.05); }
+
+        /* Səhifələrin Gizlədilməsi/Görünməsi */
+        .page { display: none; width: 100%; height: 100%; flex-direction: column; overflow: hidden; }
+        .page.active { display: flex; }
+
+        /* --- 1. GİRİŞ & QEYDİYYAT SƏHİFƏSİ --- */
+        .auth-screen { padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
+        .logo-area { text-align: center; margin-bottom: 40px; }
+        
+        /* Şəkildəki Orijinal Nexa Logosu Stili */
+        .nexa-logo-svg { width: 90px; height: auto; margin-bottom: 10px; filter: drop-shadow(0px 0px 15px rgba(0,210,255,0.6)); }
+        .brand-name { font-size: 28px; font-weight: 800; letter-spacing: 5px; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.3); font-style: italic; }
+        
+        .auth-box { width: 100%; background: var(--bg-box); padding: 25px; border-radius: 24px; border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); }
+        .auth-box h2 { text-align: center; margin-bottom: 20px; font-weight: 700; letter-spacing: 1px; }
+        .auth-box input { width: 100%; padding: 14px; margin: 10px 0; background: var(--bg-input); border: 1px solid rgba(59, 130, 246, 0.4); color: white; border-radius: 12px; font-size: 15px; transition: 0.3s; }
+        .auth-box input:focus { border-color: var(--accent-glow); outline: none; box-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
+        .auth-box button { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent-blue), #1d4ed8); border: none; color: white; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; transition: 0.3s; }
+        .auth-box button:hover { opacity: 0.9; transform: translateY(-1px); }
+        .toggle-txt { font-size: 13px; cursor: pointer; color: var(--accent-glow); text-align: center; margin-top: 18px; font-weight: 500; }
+
+        /* --- 2. ANA SƏHİFƏ (FEED) VƏ HEADER --- */
+        .app-header { height: 60px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: rgba(2, 5, 18, 0.85); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .app-header .logo { font-size: 20px; font-weight: 800; letter-spacing: 3px; color: #fff; }
+        .app-header .header-actions i { font-size: 20px; color: white; margin-left: 18px; cursor: pointer; }
+
+        .feed-content { flex: 1; overflow-y: auto; padding-bottom: 75px; scrollbar-width: none; }
+        .feed-content::-webkit-scrollbar { display: none; }
+
+        /* Hekayələr (Stories) Bölməsi - Şəkildəki Kimi */
+        .stories-container { display: flex; padding: 15px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); overflow-x: auto; gap: 14px; scrollbar-width: none; }
+        .stories-container::-webkit-scrollbar { display: none; }
+        .story-wrapper { display: flex; flex-direction: column; align-items: center; min-width: 68px; cursor: pointer; }
+        .story-avatar-box { width: 64px; height: 64px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, #00d2ff, #3b82f6, #9333ea); display: flex; justify-content: center; align-items: center; position: relative; }
+        .story-avatar-box img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg-main); }
+        .story-wrapper span { font-size: 11px; margin-top: 6px; color: var(--text-color); text-align: center; max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* Mavi Tik (Verified Badge) Stili */
+        .mavi-tik { color: #38bdf8; font-size: 12px; margin-left: 4px; vertical-align: middle; }
+
+        /* Post Kartı Stili - Tam Şəkildəki Kimi Görünüş */
+        .post-card { background: rgba(11, 18, 44, 0.4); margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .post-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; }
+        .post-user-info { display: flex; align-items: center; }
+        .post-user-img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; margin-right: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .post-username { font-size: 14px; font-weight: 600; display: flex; align-items: center; }
+        .post-time { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+        
+        .post-caption { padding: 0 16px 10px 16px; font-size: 14px; line-height: 1.4; color: #e5e7eb; }
+        .post-img-container { width: 100%; position: relative; background: #000; }
+        .post-img { width: 100%; height: auto; max-height: 400px; object-fit: cover; display: block; }
+        
+        /* Canlı Yayım İşarəsi */
+        .live-badge { position: absolute; bottom: 12px; right: 12px; background: red; color: white; padding: 3px 8px; font-size: 10px; font-weight: bold; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .post-actions { display: flex; padding: 12px 16px; gap: 20px; font-size: 14px; color: #f3f4f6; }
+        .action-item { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
+        .action-item:hover { color: var(--accent-glow); }
+        .action-item i.active { color: #ef4444; }
+
+        /* --- 3. SABİT ALT NAVİQASİYA (NAVBAR) --- */
+        .bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; height: 65px; background: rgba(2, 5, 18, 0.92); backdrop-filter: blur(15px); border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+        .nav-btn { color: var(--text-muted); font-size: 20px; cursor: pointer; padding: 10px; transition: 0.2s; position: relative; }
+        .nav-btn.active { color: white; filter: drop-shadow(0 0 8px var(--accent-blue)); }
+
+        /* --- 4. POST PAYLAŞMA PANELİ (MODAL) --- */
+        .share-screen { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .share-screen h3 { text-align: center; margin-bottom: 10px; }
+        .share-screen textarea { width: 100%; height: 100px; background: var(--bg-input); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; color: white; padding: 12px; font-size: 14px; resize: none; }
+        .share-screen input[type="text"] { width: 100%; padding: 12px; background: var(--bg-input); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; color: white; }
+
+        /* --- 5. ADMİN PANELİ SƏHİFƏSİ --- */
+        .admin-screen { padding: 20px; overflow-y: auto; padding-bottom: 80px; }
+        .admin-screen h2 { text-align: center; margin-bottom: 15px; color: var(--accent-glow); text-shadow: 0 0 10px rgba(0,210,255,0.2); }
+        .user-manage-card { background: var(--bg-box); padding: 16px; border-radius: 16px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .user-manage-card h4 { font-size: 16px; margin-bottom: 10px; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+        .admin-control-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 14px; }
+        .admin-btn-sm { padding: 6px 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .btn-verify { background: #0284c7; color: white; }
+        .btn-unverify { background: #475569; color: white; }
+        .num-input { width: 70px; padding: 4px; background: var(--bg-main); border: 1px solid var(--accent-blue); color: white; border-radius: 4px; text-align: center; }
+
+        /* --- 6. PROFİL SƏHİFƏSİ --- */
+        .profile-screen { overflow-y: auto; padding-bottom: 75px; }
+        .profile-header { padding: 20px 16px; text-align: center; position: relative; }
+        .profile-avatar-main { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+        .profile-name-title { font-size: 20px; font-weight: 700; margin-top: 10px; display: flex; align-items: center; justify-content: center; }
+        .profile-stats { display: flex; justify-content: center; gap: 30px; margin-top: 15px; background: rgba(11, 18, 44, 0.5); padding: 12px; border-radius: 12px; }
+        .stat-item { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: var(--text-muted); }
+        .stat-item strong { font-size: 16px; color: white; }
+        .admin-trigger-btn { margin: 15px auto; padding: 8px 16px; background: transparent; border: 1px solid #ef4444; color: #ef4444; border-radius: 20px; font-size: 12px; cursor: pointer; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2 id="title" style="text-align:center;">Giriş</h2>
-    <input type="text" id="user" placeholder="İstifadəçi adı">
-    <input type="password" id="pass" placeholder="Şifrə">
-    <button onclick="authAction()" id="btn">Daxil ol</button>
-    <p onclick="toggleMode()" style="font-size: 13px; cursor: pointer; color: #3b82f6; text-align: center; margin-top: 15px;">Qeydiyyatdan keç</p>
+<div class="phone-container">
+
+    <div id="page-auth" class="page active">
+        <div class="auth-screen">
+            <div class="logo-area">
+                <svg class="nexa-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 55C25 35 38 35 45 48C52 62 65 62 80 38" stroke="url(#paint0_linear)" stroke-width="8" stroke-linecap="round"/>
+                    <path d="M50 15L52 28L65 30L52 32L50 45L48 32L35 30L48 28Z" fill="#00d2ff"/>
+                    <defs>
+                        <linearGradient id="paint0_linear" x1="20" y1="45" x2="80" y2="45" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#9ca3af"/>
+                            <stop offset="0.5" stop-color="#ffffff"/>
+                            <stop offset="1" stop-color="#4b5563"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="brand-name">NEXA</div>
+                <div style="font-size: 11px; color: var(--accent-glow); letter-spacing: 2px; margin-top: 5px;">AZƏRBAYCANIN RƏQƏMSAL EVİ</div>
+            </div>
+            
+            <div class="auth-box">
+                <h2 id="title">Giriş</h2>
+                <input type="text" id="user" placeholder="İstifadəçi adı">
+                <input type="password" id="pass" placeholder="Şifrə">
+                <button onclick="authAction()" id="btn">Daxil ol</button>
+                <p onclick="toggleMode()" id="toggle-text" class="toggle-txt">Hesabın yoxdur? Qeydiyyatdan keç</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-feed" class="page">
+        <div class="app-header">
+            <div class="logo">NEXA</div>
+            <div class="header-actions">
+                <i class="fa-regular fa-heart"></i>
+                <i class="fa-regular fa-paper-plane"></i>
+            </div>
+        </div>
+        
+        <div class="feed-content">
+            <div class="stories-container" id="stories-box">
+                </div>
+            
+            <div id="posts-box">
+                </div>
+        </div>
+    </div>
+
+    <div id="page-share" class="page">
+        <div class="app-header">
+            <div class="logo">Yenilik Paylaş</div>
+        </div>
+        <div class="share-screen">
+            <h3>Nə düşünürsən?</h3>
+            <textarea id="post-caption-input" placeholder="Bura nəsə yaz... Məsələn: Bakının gözəlliyi ✨🇦🇿"></textarea>
+            <input type="text" id="post-img-input" placeholder="Şəkil URL daxil et (Məs: https://images.unsplash.com/...)">
+            <button onclick="submitPost()" style="background: var(--accent-blue); color: white; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;">Paylaş</button>
+        </div>
+    </div>
+
+    <div id="page-profile" class="page">
+        <div class="app-header">
+            <div class="logo" id="profile-header-name">Profil</div>
+            <div class="header-actions"><i class="fa-solid fa-bars"></i></div>
+        </div>
+        <div class="profile-screen">
+            <div class="profile-header">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="profile-avatar-main" id="my-profile-avatar">
+                <div class="profile-name-title" id="my-profile-name">İstifadəçi <span id="my-profile-badge"></span></div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item"><strong id="stat-posts-count">0</strong><span>Post</span></div>
+                    <div class="stat-item"><strong id="stat-followers">1.2K</strong><span>İzləyici</span></div>
+                    <div class="stat-item"><strong id="stat-following">180</strong><span>İzlənilir</span></div>
+                </div>
+
+                <button class="admin-trigger-btn" onclick="openAdminPanel()">⚙️ Admin Panelə Keç</button>
+                <button onclick="logout()" style="background:none; border:none; color:var(--text-muted); font-size:13px; cursor:pointer; text-decoration:underline;">Çıxış et</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-admin" class="page">
+        <div class="app-header">
+            <div class="logo">Nexa Control Panel</div>
+            <div class="header-actions"><i class="fa-solid fa-xmark" onclick="switchPage('feed')" style="cursor:pointer;"></i></div>
+        </div>
+        <div class="admin-screen">
+            <h2>İstifadəçi İdarəetməsi</h2>
+            <div id="admin-users-list">
+                </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav" id="app-navbar" style="display: none;">
+        <div class="nav-btn active" onclick="switchPage('feed')" id="nav-feed"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-btn" onclick="switchPage('explore')"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="nav-btn" onclick="switchPage('share')" id="nav-share"><i class="fa-solid fa-square-plus"></i></div>
+        <div class="nav-btn" onclick="switchPage('reels')"><i class="fa-solid fa-clapperboard"></i></div>
+        <div class="nav-btn" onclick="switchPage('profile')" id="nav-profile"><i class="fa-solid fa-user"></i></div>
+    </div>
+
 </div>
 
 <script>
-    // Sənin Firebase konfiqurasiyan
+    // --- FİRƏBASE AYARLARI (Sənin Baza Məlumatların) ---
     const firebaseConfig = {
         apiKey: "AIzaSyAWFpGs1CCKLQ3NL45o81nPCMuKRqLgJHM",
         authDomain: "nexa-51c08.firebaseapp.com",
@@ -37,42 +238,348 @@
         appId: "1:124010138329:web:8c73c87483f2e28a5d8cc8"
     };
 
-    // Firebase-i işə sal
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     let isLogin = true;
+    let currentUser = localStorage.getItem('nexa_user') || null;
 
+    // --- SƏHİFƏ KEÇİDLƏRİ SİSTEMİ ---
+    function switchPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        const targetPage = document.getElementById('page-' + pageId);
+        if(targetPage) targetPage.classList.add('active');
+        
+        const targetNav = document.getElementById('nav-' + pageId);
+        if(targetNav) targetNav.classList.add('active');
+
+        if(pageId === 'feed') { loadFeedData(); }
+        if(pageId === 'profile') { loadMyProfile(); }
+        if(pageId === 'admin') { loadAdminPanelData(); }
+    }
+
+    // --- GİRİŞ VƏ QEYDİYYAT LOGİKASI ---
     function toggleMode() {
         isLogin = !isLogin;
         document.getElementById('title').innerText = isLogin ? "Giriş" : "Qeydiyyat";
         document.getElementById('btn').innerText = isLogin ? "Daxil ol" : "Qeydiyyatı tamamla";
+        document.getElementById('toggle-text').innerText = isLogin ? "Hesabın yoxdur? Qeydiyyatdan keç" : "Artıq hesabın var? Daxil ol";
     }
 
     function authAction() {
-        const u = document.getElementById('user').value.trim();
+        const u = document.getElementById('user').value.trim().toLowerCase();
         const p = document.getElementById('pass').value;
-        if(!u || !p) return alert("Boş xana qoymayın!");
+        if(!u || !p) return alert("Xanaları doldurun, brat!");
         
         const userRef = db.ref('users/' + u);
 
         if (!isLogin) {
-            // Qeydiyyat
-            userRef.set({ pass: p }).then(() => {
-                alert("Qeydiyyat uğurludur!");
-                toggleMode();
-            }).catch(e => alert("Xəta: " + e.message));
+            // Qeydiyyat prosesi - Məlumatları qalıcı və təkmil yazırıq
+            userRef.once('value').then(snap => {
+                if(snap.exists()) {
+                    alert("Bu istifadəçi adı artıq götürülüb!");
+                } else {
+                    userRef.set({
+                        pass: p,
+                        username: u,
+                        verified: false,
+                        followers: Math.floor(Math.random() * 500) + 50, // Yeni açılanlara avtomatik təbii say veririk
+                        following: 120,
+                        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+                    }).then(() => {
+                        alert("Qeydiyyat tamamlandı! İndi daxil ola bilərsən.");
+                        toggleMode();
+                    });
+                }
+            });
         } else {
-            // Giriş
+            // Giriş prosesi
             userRef.once('value').then((snap) => {
                 if (snap.exists() && snap.val().pass === p) {
-                    alert("Xoş gəldin, " + u + "!");
+                    currentUser = u;
+                    localStorage.setItem('nexa_user', u);
+                    document.getElementById('app-navbar').style.display = 'flex';
+                    switchPage('feed');
                 } else {
-                    alert("İstifadəçi adı və ya şifrə yanlışdır!");
+                    alert("İstifadəçi adı və ya şifrə səhvdir!");
                 }
             });
         }
     }
+
+    function logout() {
+        localStorage.removeItem('nexa_user');
+        currentUser = null;
+        document.getElementById('app-navbar').style.display = 'none';
+        switchPage('auth');
+    }
+
+    // --- ANA SƏHİFƏNİN (FEED) DİNAMİK YÜKLƏNMƏSİ ---
+    function loadFeedData() {
+        // Hekayələr hissəsini doldururuq (Şəkildəki adlarla uyğunlaşdırılmış default + yeni qeydiyyatlar)
+        const storiesBox = document.getElementById('stories-box');
+        storiesBox.innerHTML = `
+            <div class="story-wrapper">
+                <div class="story-avatar-box"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100"></div>
+                <span>Sən</span>
+            </div>
+            <div class="story-wrapper">
+                <div class="story-avatar-box"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"></div>
+                <span>Aysel</span>
+            </div>
+            <div class="story-wrapper">
+                <div class="story-avatar-box"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100"></div>
+                <span>Orxan</span>
+            </div>
+            <div class="story-wrapper">
+                <div class="story-avatar-box"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100"></div>
+                <span>Lala</span>
+            </div>
+            <div class="story-wrapper">
+                <div class="story-avatar-box"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100"></div>
+                <span>Rəşad</span>
+            </div>
+        `;
+
+        // Postları bazadan çəkirik
+        db.ref('posts').on('value', (snapshot) => {
+            const postsBox = document.getElementById('posts-box');
+            postsBox.innerHTML = "";
+            
+            if(!snapshot.exists()) {
+                // Əgər bazada post yoxdursa, şəkildəki möhtəşəm Bakı postunu standart olaraq bura qoyuruq
+                postsBox.innerHTML = `
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-user-info">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" class="post-user-img">
+                                <div>
+                                    <div class="post-username">Aylin_97 <i class="fa-solid fa-circle-check mavi-tik"></i></div>
+                                    <div class="post-time">2 saat əvvəl</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-ellipsis-vertical" style="color:var(--text-muted)"></i>
+                        </div>
+                        <div class="post-caption">Bakının gözəlliyi ✨🇦🇿</div>
+                        <div class="post-img-container">
+                            <img src="https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?w=600" class="post-img">
+                        </div>
+                        <div class="post-actions">
+                            <div class="action-item"><i class="fa-regular fa-heart"></i> <span>2.5K</span></div>
+                            <div class="action-item"><i class="fa-regular fa-comment"></i> <span>152</span></div>
+                            <div class="action-item"><i class="fa-regular fa-paper-plane"></i> <span>32</span></div>
+                        </div>
+                    </div>
+
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-user-info">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" class="post-user-img">
+                                <div>
+                                    <div class="post-username">Orxan.music</div>
+                                    <div class="post-time">3 saat əvvəl</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-ellipsis-vertical" style="color:var(--text-muted)"></i>
+                        </div>
+                        <div class="post-caption">Yeni mahnım artıq Nexada! 🎵 Dəstəyinizi gözləyirəm!</div>
+                        <div class="post-img-container">
+                            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600" class="post-img">
+                            <span class="live-badge">CANLI</span>
+                        </div>
+                        <div class="post-actions">
+                            <div class="action-item"><i class="fa-regular fa-heart"></i> <span>1.2K</span></div>
+                            <div class="action-item"><i class="fa-regular fa-comment"></i> <span>88</span></div>
+                            <div class="action-item"><i class="fa-regular fa-paper-plane"></i> <span>14</span></div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Realtime bazadan gələn canlı postlar listələnir
+            let postsData = snapshot.val();
+            let keys = Object.keys(postsData).reverse(); // Yenilər yuxarıda olsun
+            
+            keys.forEach(key => {
+                let post = postsData[key];
+                let tikHtml = post.userVerified ? `<i class="fa-solid fa-circle-check mavi-tik"></i>` : '';
+                let imgHtml = post.image ? `<div class="post-img-container"><img src="${post.image}" class="post-img"></div>` : '';
+                
+                let postHtml = `
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-user-info">
+                                <img src="${post.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}" class="post-user-img">
+                                <div>
+                                    <div class="post-username">${post.author} ${tikHtml}</div>
+                                    <div class="post-time">İndi</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-caption">${post.caption}</div>
+                        ${imgHtml}
+                        <div class="post-actions">
+                            <div class="action-item" onclick="likePost('${key}')"><i class="fa-regular fa-heart"></i> <span>${post.likes || 0}</span></div>
+                            <div class="action-item"><i class="fa-regular fa-comment"></i> <span>0</span></div>
+                        </div>
+                    </div>
+                `;
+                postsBox.innerHTML += postHtml;
+            });
+        });
+    }
+
+    // --- YENİ POST PAYLAŞMA FUNKSİYASI ---
+    function submitPost() {
+        const caption = document.getElementById('post-caption-input').value.trim();
+        const imgUrl = document.getElementById('post-img-input').value.trim();
+        
+        if(!caption) return alert("Post mətni mütləq yazılmalıdır!");
+
+        // İstifadəçinin bazadakı mövcud məlumatlarını oxuyuruq (Mavi tiki varmı deyə)
+        db.ref('users/' + currentUser).once('value').then(snap => {
+            let userData = snap.val() || {};
+            
+            const newPostRef = db.ref('posts').push();
+            newPostRef.set({
+                author: currentUser,
+                caption: caption,
+                image: imgUrl || null,
+                likes: 0,
+                userVerified: userData.verified || false,
+                avatar: userData.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+            }).then(() => {
+                alert("Postunuz uğurla Nexa-da yayımlandı!");
+                document.getElementById('post-caption-input').value = "";
+                document.getElementById('post-img-input').value = "";
+                switchPage('feed');
+            });
+        });
+    }
+
+    // --- POST BƏYƏNMƏ (LIKE) SİSTEMİ ---
+    function likePost(postKey) {
+        const postRef = db.ref('posts/' + postKey + '/likes');
+        postRef.transaction((currentLikes) => {
+            return (currentLikes || 0) + 1;
+        });
+    }
+
+    // --- PROFİL SƏHİFƏSİNİN YÜKLƏNMƏSİ ---
+    function loadMyProfile() {
+        if(!currentUser) return;
+        document.getElementById('profile-header-name').innerText = "@" + currentUser;
+        document.getElementById('my-profile-name').innerHTML = currentUser + ' <span id="my-profile-badge"></span>';
+        
+        db.ref('users/' + currentUser).on('value', (snap) => {
+            if(snap.exists()) {
+                let uData = snap.val();
+                document.getElementById('stat-followers').innerText = formatNumber(uData.followers || 0);
+                document.getElementById('stat-following').innerText = uData.following || 120;
+                if(uData.verified) {
+                    document.getElementById('my-profile-badge').innerHTML = `<i class="fa-solid fa-circle-check mavi-tik" style="font-size:18px;"></i>`;
+                } else {
+                    document.getElementById('my-profile-badge').innerHTML = '';
+                }
+            }
+        });
+
+        // İstifadəçinin neçə post atdığını sayırıq
+        db.ref('posts').once('value').then(snap => {
+            let count = 0;
+            if(snap.exists()) {
+                snap.forEach(p => {
+                    if(p.val().author === currentUser) count++;
+                });
+            }
+            document.getElementById('stat-posts-count').innerText = count;
+        });
+    }
+
+    // --- ADMİN PANELİ: MAVİ TİK, İZLƏYİCİ İDARƏETMƏSİ ---
+    function openAdminPanel() {
+        switchPage('admin');
+    }
+
+    function loadAdminPanelData() {
+        db.ref('users').on('value', (snapshot) => {
+            const container = document.getElementById('admin-users-list');
+            container.innerHTML = "";
+            
+            if(!snapshot.exists()) return;
+
+            snapshot.forEach(child => {
+                let uName = child.key;
+                let uData = child.val();
+                let tikStatus = uData.verified ? `<span style="color:#38bdf8">Mavi Tikli</span>` : `Yoxdur`;
+                
+                let card = document.createElement('div');
+                card.className = 'user-manage-card';
+                card.innerHTML = `
+                    <h4>@${uName}</h4>
+                    <div class="admin-control-row">
+                        <span>Mavi Tik: <strong>${tikStatus}</strong></span>
+                        ${uData.verified ? 
+                            `<button class="admin-btn-sm btn-unverify" onclick="setVerifyStatus('${uName}', false)">Tiki Sil</button>` :
+                            `<button class="admin-btn-sm btn-verify" onclick="setVerifyStatus('${uName}', true)">Mavi Tik Ver</button>`
+                        }
+                    </div>
+                    <div class="admin-control-row" style="margin-top:12px;">
+                        <span>İzləyici Sayı:</span>
+                        <div>
+                            <input type="number" class="num-input" id="fol-val-${uName}" value="${uData.followers || 0}">
+                            <button class="admin-btn-sm btn-verify" onclick="updateFollowers('${uName}')">Yenilə</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        });
+    }
+
+    function setVerifyStatus(username, status) {
+        db.ref('users/' + username).update({ verified: status }).then(() => {
+            // Əgər istifadəçinin köhnə postları varsa, oradakı tikləri də sinxron yeniləyirik
+            db.ref('posts').once('value').then(snap => {
+                if(snap.exists()) {
+                    snap.forEach(postSnap => {
+                        if(postSnap.val().author === username) {
+                            db.ref('posts/' + postSnap.key).update({ userVerified: status });
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    function updateFollowers(username) {
+        const newVal = parseInt(document.getElementById('fol-val-' + username).value) || 0;
+        db.ref('users/' + username).update({ followers: newVal }).then(() => {
+            alert("@" + username + " üçün izləyici sayı yeniləndi!");
+        });
+    }
+
+    // Böyük rəqəmləri vizual qısaltmaq üçün köməkçi funksiya (Məs: 2500 -> 2.5K)
+    function formatNumber(num) {
+        if(num >= 1000) {
+            return (num/1000).toFixed(1) + 'K';
+        }
+        return num;
+    }
+
+    // --- SƏHİFƏ İLK AÇILANDA Yoxlanış ---
+    window.onload = function() {
+        if(currentUser) {
+            document.getElementById('app-navbar').style.display = 'flex';
+            switchPage('feed');
+        } else {
+            switchPage('auth');
+        }
+    }
 </script>
+
 </body>
 </html>
