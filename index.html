@@ -175,7 +175,7 @@
 </head>
 <body>
 
-    <div id="authScreen" class="auth-overlay">
+    <div id="authScreen" class="auth-overlay hidden">
         <div class="auth-card">
             <svg class="logo-svg" viewBox="0 0 100 100" style="margin: 0 auto 10px auto; display: block;">
                 <path d="M20,60 C30,30 50,30 60,50 C70,70 80,40 90,50" fill="none" stroke="url(#logoGlow)" stroke-width="8" stroke-linecap="round"/>
@@ -337,11 +337,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Sənin Firebase Config Məlumatların Bura Tam Əlavə Olundu 🔥
         const firebaseConfig = {
           apiKey: "AIzaSyAWFpGs1CCKLQ3NL45o81nPCMuKRqLgJHM",
           authDomain: "nexa-51c08.firebaseapp.com",
-          databaseURL: "https://nexa-51c08-default-rtdb.firebaseio.com", // Sənin Realtime DB Linkin
+          databaseURL: "https://nexa-51c08-default-rtdb.firebaseio.com",
           projectId: "nexa-51c08",
           storageBucket: "nexa-51c08.firebasestorage.app",
           messagingSenderId: "124010138329",
@@ -356,17 +355,14 @@
         let globalUsers = {};
         let globalPosts = [];
 
-        // Global Dinamik Dinləmə (Realtime Sync)
         function initRealtimeSync() {
-            // İstifadəçiləri dinlə
             onValue(ref(database, 'users'), (snapshot) => {
                 if(snapshot.exists()) {
                     globalUsers = snapshot.val();
-                    // Əgər admin hesab hələ yoxdursa avtomatik yarat
                     if(!globalUsers["admin"]) {
                         set(ref(database, 'users/admin'), { username: "admin", name: "Sistem Administratoru", pass: "nexa2026", followers: 150000, following: 120, verified: true, role: "superadmin", avatar: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" });
                     }
-                    if(currentUser) {
+                    if(currentUser && globalUsers[currentUser.username]) {
                         currentUser = globalUsers[currentUser.username];
                         sessionStorage.setItem('nexa_session', JSON.stringify(currentUser));
                     }
@@ -375,24 +371,18 @@
                 }
             });
 
-            // Postları dinlə
             onValue(ref(database, 'posts'), (snapshot) => {
                 if(snapshot.exists()) {
                     const data = snapshot.val();
                     globalPosts = Object.keys(data).map(key => data[key]);
-                    // İdiye görə sırala (Yenilər üstdə)
                     globalPosts.sort((a,b) => b.id - a.id);
                 } else {
                     globalPosts = [];
                 }
                 renderFeed();
+                if(currentUser) renderProfile();
             });
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            initRealtimeSync();
-            if (currentUser) { hydrateApp(); } else { document.getElementById('authScreen').classList.remove('hidden'); }
-        });
 
         window.handleLogin = function() {
             const user = document.getElementById('loginUser').value.trim().toLowerCase();
@@ -440,7 +430,7 @@
         }
 
         window.switchMobileNav = function(screenId, element) {
-            switchScreen(screenId, null);
+            window.switchScreen(screenId, null);
             if(element) element.classList.add('active');
         }
 
@@ -478,7 +468,7 @@
 
             set(ref(database, 'posts/' + postId), newPostData).then(() => {
                 document.getElementById('postInput').value = "";
-                clearSelectedImage();
+                window.clearSelectedImage();
             });
         }
 
@@ -502,7 +492,7 @@
                         <div class="post-caption">${post.caption}</div>
                         ${post.image ? `<div class="post-media-ctx"><img src="${post.image}"></div>` : ''}
                         <div class="post-actions-bar">
-                            <div class="action-item" onclick="toggleLike(${post.id}, ${post.likes})">
+                            <div class="action-item" onclick="toggleLike('${post.id}', ${post.likes})">
                                 <i class="fa-regular fa-heart"></i><span>${post.likes}</span>
                             </div>
                             <div class="action-item"><i class="fa-regular fa-comment"></i><span>0</span></div>
@@ -561,17 +551,27 @@
             const select = document.getElementById('adminUserSelect');
             if(!select) return;
             
+            const currentSelected = select.value;
             select.innerHTML = Object.keys(globalUsers).map(k => `<option value="${k}">${globalUsers[k].name} (@${k})</option>`).join('');
+            
+            if(currentSelected && globalUsers[currentSelected]) {
+                select.value = currentSelected;
+            }
+
             document.getElementById('adminSystemUserList').innerHTML = Object.keys(globalUsers).map(k => `
                 <div class="user-row">
                     <div><strong>${globalUsers[k].name}</strong> <span style="font-size:11px; color:var(--text-muted);">(@${k})</span></div>
                     <span>${globalUsers[k].verified ? '✅ Tik' : '❌ Adi'}</span>
                 </div>
             `).join('');
+
+            window.loadUserMetaToAdmin();
         }
 
         window.loadUserMetaToAdmin = function() {
-            const u = globalUsers[document.getElementById('adminUserSelect').value];
+            const select = document.getElementById('adminUserSelect');
+            if(!select || !select.value) return;
+            const u = globalUsers[select.value];
             if(u) {
                 document.getElementById('adminVerification').value = u.verified ? "true" : "false";
                 document.getElementById('adminFollowerCount').value = u.followers;
@@ -599,6 +599,11 @@
         }
 
         window.logout = function() { sessionStorage.removeItem('nexa_session'); window.location.reload(); }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initRealtimeSync();
+            if (currentUser) { hydrateApp(); } else { document.getElementById('authScreen').classList.remove('hidden'); }
+        });
     </script>
 </body>
 </html>
