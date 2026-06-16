@@ -1,217 +1,117 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexa v1</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa | Premium Experience</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#0f0f0f;color:white}
+        :root {
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --accent: #ff0050;
+            --text: #ffffff;
+        }
 
-/* LOGIN */
-.login{
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  gap:10px;
-}
-.login-box{
-  background:#1c1c1c;
-  padding:30px;
-  border-radius:15px;
-  width:300px;
-}
-input{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border:none;
-  border-radius:8px;
-}
-button{
-  width:100%;
-  padding:10px;
-  background:#ff2d55;
-  border:none;
-  color:white;
-  border-radius:8px;
-  cursor:pointer;
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-/* APP */
-.app{display:none}
+        /* Üst Panel */
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-/* TOP BAR */
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  padding:15px;
-  background:#151515;
-  position:sticky;
-  top:0;
-}
+        /* Post Stili */
+        .feed-container { max-width: 420px; margin: auto; padding: 10px; }
+        .post-card {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .media-placeholder {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(45deg, #1a1a1a, #0f0f0f);
+            border-radius: 15px;
+            margin: 10px 0;
+        }
 
-/* STORIES */
-.stories{
-  display:flex;
-  gap:10px;
-  padding:10px;
-  overflow-x:auto;
-}
-.story{
-  min-width:60px;
-  text-align:center;
-}
-.story-circle{
-  width:55px;
-  height:55px;
-  border-radius:50%;
-  border:2px solid #ff2d55;
-}
+        /* Navigasiya */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
 
-/* POST */
-.post{
-  background:#1c1c1c;
-  margin:10px;
-  border-radius:10px;
-  overflow:hidden;
-}
-.post img{
-  width:100%;
-}
-.post-info{
-  padding:10px;
-}
+        .icon { font-size: 24px; cursor: pointer; transition: 0.3s; }
+        .icon:hover { color: var(--accent); transform: scale(1.2); }
 
-/* POST CREATE */
-.create-post{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#ff2d55;
-  width:55px;
-  height:55px;
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:30px;
-  cursor:pointer;
-}
-
-/* MODAL */
-.modal{
-  display:none;
-  position:fixed;
-  top:0;left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.7);
-  justify-content:center;
-  align-items:center;
-}
-.modal-content{
-  background:#1c1c1c;
-  padding:20px;
-  width:300px;
-  border-radius:10px;
-}
-</style>
+        /* Reels Rejimi */
+        .reels-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
+        .reel-slide { height: 100vh; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; background: #000; }
+    </style>
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div class="login" id="login">
-  <div class="login-box">
-    <h2>Nexa Login</h2>
-    <input id="user" placeholder="Username">
-    <input id="pass" type="password" placeholder="Password">
-    <button onclick="login()">Daxil ol</button>
-  </div>
-</div>
+    <header>
+        <h2 style="margin:0; font-weight: 600; letter-spacing: -1px;">Nexa</h2>
+        <div style="background: var(--accent); padding: 8px 15px; border-radius: 12px; font-size: 12px;">YENİ</div>
+    </header>
 
-<!-- APP -->
-<div class="app" id="app">
-
-  <div class="topbar">
-    <h2>NEXA</h2>
-    <span>🔔</span>
-  </div>
-
-  <!-- STORIES -->
-  <div class="stories">
-    <div class="story"><div class="story-circle"></div><small>Ali</small></div>
-    <div class="story"><div class="story-circle"></div><small>Veli</small></div>
-    <div class="story"><div class="story-circle"></div><small>Nigar</small></div>
-    <div class="story"><div class="story-circle"></div><small>Elvin</small></div>
-  </div>
-
-  <!-- POSTS -->
-  <div id="feed">
-    <div class="post">
-      <img src="https://picsum.photos/400/300" />
-      <div class="post-info">
-        <b>nexa_user</b>
-        <p>First post on Nexa 🚀</p>
-      </div>
+    <div id="main-view" class="feed-container">
+        <!-- Postlar -->
+        <div class="post-card">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:35px; height:35px; background:#333; border-radius:50%;"></div>
+                <strong>istifadəçi_adi</strong>
+            </div>
+            <div class="media-placeholder"></div>
+            <p style="font-size: 14px; color: #aaa;">Bu, Nexa-nın premium görünüşüdür. ✨</p>
+        </div>
     </div>
-  </div>
 
-</div>
+    <nav class="nav-bar">
+        <div class="icon" onclick="render('feed')">🏠</div>
+        <div class="icon" onclick="render('explore')">🔍</div>
+        <div class="icon" onclick="render('reels')">⚡</div>
+        <div class="icon">👤</div>
+    </nav>
 
-<!-- CREATE POST -->
-<div class="create-post" onclick="openModal()">+</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h3>Post yarat</h3>
-    <input id="caption" placeholder="Caption">
-    <input id="img" placeholder="Image URL">
-    <button onclick="addPost()">Paylaş</button>
-    <button onclick="closeModal()" style="margin-top:10px;background:#333;">Bağla</button>
-  </div>
-</div>
-
-<script>
-function login(){
-  document.getElementById("login").style.display="none";
-  document.getElementById("app").style.display="block";
-}
-
-function openModal(){
-  document.getElementById("modal").style.display="flex";
-}
-
-function closeModal(){
-  document.getElementById("modal").style.display="none";
-}
-
-function addPost(){
-  let caption=document.getElementById("caption").value;
-  let img=document.getElementById("img").value;
-
-  if(!img) img="https://picsum.photos/400/300";
-
-  let post=document.createElement("div");
-  post.className="post";
-  post.innerHTML=`
-    <img src="${img}">
-    <div class="post-info">
-      <b>sən</b>
-      <p>${caption}</p>
-    </div>
-  `;
-
-  document.getElementById("feed").prepend(post);
-
-  closeModal();
-}
-</script>
-
+    <script>
+        function render(page) {
+            const container = document.getElementById('main-view');
+            if(page === 'reels') {
+                container.className = 'reels-container';
+                container.innerHTML = `
+                    <div class="reel-slide">Reels Məzmunu 1</div>
+                    <div class="reel-slide">Reels Məzmunu 2</div>
+                `;
+            } else {
+                container.className = 'feed-container';
+                container.innerHTML = '<h2>' + page.toUpperCase() + '</h2><p>Premium interfeys aktivdir.</p>';
+            }
+        }
+    </script>
 </body>
 </html>
