@@ -7,603 +7,87 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg-dark: #030712;
-            --surface-dark: #0b1329;
-            --surface-card: #111c44;
-            --accent-blue: #3b82f6;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --border-color: rgba(59, 130, 246, 0.2);
-            --neon-glow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
-
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Inter', sans-serif; user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow: hidden;
-            height: 100vh;
-        }
-
-        .app-container {
-            display: flex; height: 100vh; width: 100vw; position: relative;
-        }
-
-        /* SIDEBAR (PC) */
-        .sidebar {
-            width: 260px; background-color: var(--surface-dark);
-            border-right: 1px solid var(--border-color);
-            display: flex; flex-direction: column;
-            justify-content: space-between; padding: 25px 15px; z-index: 10;
-        }
-
-        .logo-area {
-            display: flex; flex-direction: column; align-items: center; padding-bottom: 30px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .logo-svg { width: 65px; height: auto; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
-        
-        .logo-text {
-            font-size: 22px; font-weight: 700; letter-spacing: 5px; margin-top: 10px;
-            background: linear-gradient(135deg, #fff 30%, #9ca3af);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-
-        .nav-links { list-style: none; margin-top: 20px; flex-grow: 1; }
-        
-        .nav-item {
-            display: flex; align-items: center; padding: 14px 18px; border-radius: 12px;
-            cursor: pointer; margin-bottom: 8px; transition: all 0.3s ease; color: var(--text-muted); font-weight: 500;
-        }
-
-        .nav-item i { font-size: 20px; margin-right: 15px; width: 25px; text-align: center; }
-        .nav-item:hover, .nav-item.active {
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), transparent);
-            color: var(--text-main); border-left: 4px solid var(--accent-blue); box-shadow: var(--neon-glow);
-        }
-
-        /* BOTTOM NAV (MOBILE) */
-        .mobile-nav {
-            display: none; position: fixed; bottom: 0; left: 0; right: 0;
-            height: 65px; background: rgba(11, 19, 41, 0.95);
-            backdrop-filter: blur(20px); border-top: 1px solid var(--border-color);
-            justify-content: space-around; align-items: center; z-index: 999;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .mobile-nav-item {
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--text-muted); cursor: pointer; font-size: 22px; width: 15%; transition: color 0.3s;
-        }
-
-        .mobile-nav-item.active { color: var(--accent-blue); filter: drop-shadow(0 0 5px var(--accent-blue)); }
-
-        /* CONTENT AREA */
-        .main-content {
-            flex-grow: 1; height: 100vh; overflow-y: auto;
-            background: radial-gradient(circle at 50% 0%, #0d1b3e 0%, var(--bg-dark) 70%);
-            padding-bottom: 90px; -webkit-overflow-scrolling: touch;
-        }
-
-        .feed-container { max-width: 620px; margin: 0 auto; padding: 20px 15px; }
-
-        .stories-wrapper {
-            background: rgba(11, 19, 41, 0.5); border: 1px solid var(--border-color);
-            border-radius: 20px; padding: 12px; display: flex; gap: 15px;
-            overflow-x: auto; margin-bottom: 20px; backdrop-filter: blur(10px);
-        }
-        .stories-wrapper::-webkit-scrollbar { display: none; }
-        .story-card { display: flex; flex-direction: column; align-items: center; min-width: 70px; cursor: pointer; }
-        .story-avatar-ctx { width: 62px; height: 62px; border-radius: 50%; padding: 2.5px; background: linear-gradient(45deg, #00c6ff, #0072ff); }
-        .story-avatar-ctx img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--surface-dark); }
-        .story-username { font-size: 11px; margin-top: 6px; color: var(--text-main); text-align: center; max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-        .create-post-box {
-            background: rgba(17, 28, 68, 0.4); border: 1px solid var(--border-color);
-            border-radius: 20px; padding: 15px; margin-bottom: 20px; backdrop-filter: blur(10px);
-        }
-        .create-post-upper { display: flex; gap: 12px; }
-        .create-post-upper img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
-        .create-post-input {
-            flex-grow: 1; background: rgba(3, 7, 18, 0.6); border: 1px solid var(--border-color);
-            border-radius: 12px; padding: 12px; color: var(--text-main); font-size: 14px; resize: none; outline: none;
-        }
-        .create-post-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .media-btn { background: transparent; border: none; color: var(--accent-blue); cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-        .share-btn { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; padding: 8px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; box-shadow: var(--neon-glow); }
-        
-        #imagePreviewContainer { display: none; margin-top: 10px; position: relative; border-radius: 12px; overflow: hidden; border: 1px dashed var(--accent-blue); }
-        #imagePreviewContainer img { width: 100%; display: block; max-height: 250px; object-fit: cover; }
-        .remove-preview-btn { position: absolute; top: 10px; right: 10px; background: rgba(239,68,68,0.8); border: none; color: white; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; }
-
-        .nexa-post { background: rgba(11, 19, 41, 0.65); border: 1px solid var(--border-color); border-radius: 22px; padding: 16px; margin-bottom: 20px; backdrop-filter: blur(15px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .post-user-info { display: flex; align-items: center; gap: 10px; }
-        .post-user-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); }
-        .user-details .username-line { display: flex; align-items: center; gap: 4px; font-weight: 600; font-size: 14px; }
-        .verified-badge { color: #3b82f6; font-size: 13px; }
-        .post-time { font-size: 11px; color: var(--text-muted); display: block; margin-top: 1px; }
-        .post-caption { font-size: 14px; line-height: 1.5; margin-bottom: 12px; color: #e5e7eb; }
-        .post-media-ctx { width: 100%; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 12px; position: relative; }
-        .post-media-ctx img { width: 100%; display: block; object-fit: cover; max-height: 450px; }
-        
-        .live-tag { position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; text-transform: uppercase; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
-        .post-actions-bar { display: flex; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
-        .action-item { display: flex; align-items: center; gap: 6px; color: var(--text-muted); cursor: pointer; font-size: 14px; }
-        .action-item.liked { color: #ef4444; }
-
-        .app-screen { display: none; }
-        .app-screen.active { display: block; }
-
-        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
-        .admin-card { background: var(--surface-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; }
-        .admin-card h3 { margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; color: var(--accent-blue); }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; color: white; outline: none; font-size: 13px; }
-        .admin-btn { width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
-        .user-list-container { max-height: 220px; overflow-y: auto; }
-        .user-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
-
-        .profile-header-box { background: rgba(17, 28, 68, 0.4); border: 1px solid var(--border-color); border-radius: 20px; padding: 25px 15px; text-align: center; backdrop-filter: blur(10px); }
-        .profile-main-avatar { width: 95px; height: 95px; border-radius: 50%; border: 3px solid var(--accent-blue); object-fit: cover; margin: 0 auto 12px auto; display: block; }
-        .stats-row { display: flex; justify-content: center; gap: 30px; margin: 15px 0; }
-        .stat-val { font-size: 18px; font-weight: 700; color: white; display: block; }
-        .stat-lbl { font-size: 11px; color: var(--text-muted); }
-
-        .auth-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-dark); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 15px; }
-        .auth-card { background: var(--surface-dark); border: 1px solid var(--border-color); width: 100%; max-width: 380px; border-radius: 24px; padding: 30px 25px; box-shadow: var(--neon-glow); text-align: center; }
-        
+        :root { --bg-dark: #030712; --surface-dark: #0b1329; --surface-card: #111c44; --accent-blue: #3b82f6; --text-main: #f3f4f6; --text-muted: #9ca3af; --border-color: rgba(59, 130, 246, 0.2); --neon-glow: 0 0 15px rgba(59, 130, 246, 0.4); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
+        .app-container { display: flex; height: 100vh; width: 100vw; }
+        .auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .auth-card { background: var(--surface-dark); border: 1px solid var(--border-color); width: 100%; max-width: 380px; border-radius: 24px; padding: 30px; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        .form-group input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; color: white; }
+        .admin-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; cursor: pointer; font-weight: 600; }
         .hidden { display: none !important; }
-
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .mobile-nav { display: flex; }
-            .main-content { padding-bottom: 90px; }
-            .feed-container { padding: 12px; }
-            .nexa-post { padding: 14px; border-radius: 18px; }
-            .profile-header-box { border-radius: 16px; padding: 20px 10px; }
-        }
+        .app-screen { display: none; height: 100%; overflow-y: auto; width: 100%; }
+        .app-screen.active { display: block; }
     </style>
 </head>
 <body>
 
-    <div id="authScreen" class="auth-overlay hidden">
+    <div id="authScreen" class="auth-overlay">
         <div class="auth-card">
-            <svg class="logo-svg" viewBox="0 0 100 100" style="margin: 0 auto 10px auto; display: block;">
-                <path d="M20,60 C30,30 50,30 60,50 C70,70 80,40 90,50" fill="none" stroke="url(#logoGlow)" stroke-width="8" stroke-linecap="round"/>
-                <polygon points="50,15 53,27 65,30 53,33 50,45 47,33 35,30 47,27" fill="#ffffff"/>
-                <defs><linearGradient id="logoGlow" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs>
-            </svg>
-            <h2 class="logo-text" style="margin-bottom: 20px;">NEXA</h2>
-            
+            <h2>NEXA</h2>
             <div id="loginForm">
                 <div class="form-group"><input type="text" id="loginUser" placeholder="İstifadəçi adı"></div>
                 <div class="form-group"><input type="password" id="loginPass" placeholder="Şifrə"></div>
-                <button class="admin-btn" onclick="handleLogin()" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">Giriş Et</button>
-                <p style="margin-top: 15px; font-size: 13px; color: var(--text-muted);">Hesabınız yoxdur? <span onclick="toggleAuthForms()" style="color: var(--accent-blue); cursor: pointer;">Qeydiyyat</span></p>
+                <button class="admin-btn" onclick="handleLogin()" style="background: var(--accent-blue);">Giriş Et</button>
+                <p style="margin-top:15px; cursor:pointer;" onclick="toggleAuthForms()">Hesabın yoxdur? Qeydiyyat</p>
             </div>
-
             <div id="registerForm" class="hidden">
                 <div class="form-group"><input type="text" id="regUser" placeholder="İstifadəçi adı"></div>
-                <div class="form-group"><input type="text" id="regName" placeholder="Ad və Soyad"></div>
+                <div class="form-group"><input type="text" id="regName" placeholder="Ad Soyad"></div>
                 <div class="form-group"><input type="password" id="regPass" placeholder="Şifrə"></div>
-                <button class="admin-btn" onclick="handleRegister()" style="background: linear-gradient(135deg, #10b981, #059669);">Qeydiyyatı Tamamla</button>
-                <p style="margin-top: 15px; font-size: 13px; color: var(--text-muted);">Hesabınız var? <span onclick="toggleAuthForms()" style="color: var(--accent-blue); cursor: pointer;">Giriş</span></p>
+                <button class="admin-btn" onclick="handleRegister()" style="background: #10b981;">Qeydiyyatı Tamamla</button>
+                <p style="margin-top:15px; cursor:pointer;" onclick="toggleAuthForms()">Hesabın var? Giriş</p>
             </div>
         </div>
     </div>
 
     <div class="app-container">
-        
-        <aside class="sidebar">
-            <div class="logo-area">
-                <svg class="logo-svg" viewBox="0 0 100 100"><path d="M20,60 C30,30 50,30 60,50 C70,70 80,40 90,50" fill="none" stroke="url(#sbGlow)" stroke-width="8" stroke-linecap="round"/><polygon points="50,15 53,27 65,30 53,33 50,45 47,33 35,30 47,27" fill="#ffffff"/><defs><linearGradient id="sbGlow" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs></svg>
-                <h1 class="logo-text">NEXA</h1>
-            </div>
-            <nav class="nav-links">
-                <li class="nav-item active" onclick="switchScreen('feed-screen', this)"><i class="fa-solid fa-house"></i>Ana Səhifə</li>
-                <li class="nav-item" onclick="switchScreen('explore-screen', this)"><i class="fa-solid fa-compass"></i>Kəşf Et</li>
-                <li class="nav-item" onclick="switchScreen('reels-screen', this)"><i class="fa-solid fa-clapperboard"></i>Reels</li>
-                <li class="nav-item" onclick="switchScreen('messages-screen', this)"><i class="fa-solid fa-paper-plane"></i>Mesajlar</li>
-                <li class="nav-item" onclick="switchScreen('profile-screen', this)"><i class="fa-solid fa-user"></i>Profil</li>
-                <li class="nav-item" id="adminNav" onclick="switchScreen('admin-screen', this)" style="border-color: #ef4444; color: #f87171; display:none;"><i class="fa-solid fa-user-gear"></i>Admin Panel</li>
-            </nav>
-            <div class="nav-item" onclick="logout()" style="margin-top: auto; color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i>Çıxış</div>
-        </aside>
-
-        <div class="mobile-nav">
-            <div class="mobile-nav-item active" onclick="switchMobileNav('feed-screen', this)"><i class="fa-solid fa-house"></i></div>
-            <div class="mobile-nav-item" onclick="switchMobileNav('explore-screen', this)"><i class="fa-solid fa-compass"></i></div>
-            <div class="mobile-nav-item" onclick="switchMobileNav('reels-screen', this)"><i class="fa-solid fa-clapperboard"></i></div>
-            <div class="mobile-nav-item" onclick="switchMobileNav('messages-screen', this)"><i class="fa-solid fa-paper-plane"></i></div>
-            <div class="mobile-nav-item" onclick="switchMobileNav('profile-screen', this)"><i class="fa-solid fa-user"></i></div>
-            <div class="mobile-nav-item" id="mobileAdminBtn" onclick="switchMobileNav('admin-screen', this)" style="display:none; color:#f87171;"><i class="fa-solid fa-user-gear"></i></div>
-        </div>
-
-        <main class="main-content">
-            
+        <main class="main-content" style="width:100%; padding: 20px;">
             <div id="feed-screen" class="app-screen active">
-                <div class="feed-container">
-                    <div class="stories-wrapper" id="storiesContainer"></div>
-
-                    <div class="create-post-box">
-                        <div class="create-post-upper">
-                            <img src="" id="currentAvatar" alt="Avatar">
-                            <textarea class="create-post-input" id="postInput" placeholder="Nə düşünürsünüz?" rows="2"></textarea>
-                        </div>
-                        
-                        <div id="imagePreviewContainer">
-                            <button class="remove-preview-btn" onclick="clearSelectedImage()">&times;</button>
-                            <img id="imagePreview" src="">
-                        </div>
-
-                        <div class="create-post-actions">
-                            <button class="media-btn" onclick="document.getElementById('galleryFileInput').click()">
-                                <i class="fa-regular fa-image"></i> Qalereya
-                            </button>
-                            <input type="file" id="galleryFileInput" accept="image/*" style="display:none;" onchange="previewGalleryFile(event)">
-                            <button class="share-btn" onclick="addNewPost()">Paylaş</button>
-                        </div>
-                    </div>
-
-                    <div id="feedPostsDynamic"></div>
-                </div>
+                <h1>Xoş gəlmisiniz, <span id="userNameDisplay"></span></h1>
+                <button onclick="logout()">Çıxış</button>
             </div>
-
-            <div id="explore-screen" class="app-screen">
-                <div class="feed-container">
-                    <h2 style="margin-bottom:15px; font-size:18px;"><i class="fa-solid fa-compass"></i> Trend olanlar</h2>
-                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;" id="exploreGrid"></div>
-                </div>
-            </div>
-
-            <div id="reels-screen" class="app-screen">
-                <div class="feed-container" style="max-width: 420px; padding: 5px;">
-                    <div class="nexa-post" style="padding:0; overflow:hidden; position:relative; height: 70vh; border-radius:16px;">
-                        <span class="live-tag">REELS</span>
-                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600" style="width:100%; height:100%; object-fit:cover;">
-                        <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:20px;">
-                            <h4>@travel_az</h4>
-                            <p style="font-size:12px; color:#ddd; margin-top:5px;">Xəzər sahillərində gün batımı... 🌅</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="messages-screen" class="app-screen">
-                <div class="feed-container">
-                    <h2 style="font-size:18px;"><i class="fa-solid fa-envelope"></i> Gələn Mesajlar</h2>
-                    <div class="nexa-post" style="margin-top:15px; padding:12px;" id="messagesBox"></div>
-                </div>
-            </div>
-
-            <div id="profile-screen" class="app-screen">
-                <div class="feed-container">
-                    <div class="profile-header-box">
-                        <img src="" id="profAvatar" class="profile-main-avatar">
-                        <h2 id="profFullName" style="margin-top:10px; display:flex; align-items:center; justify-content:center; gap:5px; font-size:18px;"></h2>
-                        <p id="profUsername" style="color:var(--text-muted); font-size:13px;"></p>
-                        <div class="stats-row">
-                            <div class="stat-node"><span class="stat-val" id="statFollowers">0</span><span class="stat-lbl">Takipçi</span></div>
-                            <div class="stat-node"><span class="stat-val" id="statFollowing">0</span><span class="stat-lbl">Takip</span></div>
-                            <div class="stat-node"><span class="stat-val" id="statPostsCount">0</span><span class="stat-lbl">Post</span></div>
-                        </div>
-                        <button class="admin-btn" onclick="logout()" style="background:rgba(239,68,68,0.2); color:#f87171; border:1px solid rgba(239,68,68,0.4); padding:8px; font-size:12px; margin-top:10px;">Çıxış Et</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="admin-screen" class="app-screen">
-                <div class="feed-container">
-                    <h2 style="font-size:16px; color:#f87171;"><i class="fa-solid fa-user-gear"></i> NEXA Server Control Matrix</h2>
-                    <div class="admin-grid">
-                        <div class="admin-card">
-                            <h3>İstifadəçi Tənzimlə</h3>
-                            <div class="form-group">
-                                <label>İstifadəçi Seç</label><select id="adminUserSelect" onchange="loadUserMetaToAdmin()"></select>
-                            </div>
-                            <div class="form-group">
-                                <label>Mavi Tik Statusu</label>
-                                <select id="adminVerification"><option value="false">Yoxdur</option><option value="true">Aktiv ✅</option></select>
-                            </div>
-                            <div class="form-group">
-                                <label>Takipçi Sayı</label><input type="number" id="adminFollowerCount">
-                            </div>
-                            <div class="form-group">
-                                <label>Takip Edilən</label><input type="number" id="adminFollowingCount">
-                            </div>
-                            <button class="admin-btn" onclick="saveAdminModifications()">Verilənləri Yenilə</button>
-                        </div>
-                        <div class="admin-card">
-                            <h3>Qalıcı Hesab Bazası</h3>
-                            <div class="user-list-container" id="adminSystemUserList"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </main>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
-          apiKey: "AIzaSyAWFpGs1CCKLQ3NL45o81nPCMuKRqLgJHM",
-          authDomain: "nexa-51c08.firebaseapp.com",
-          databaseURL: "https://nexa-51c08-default-rtdb.firebaseio.com",
-          projectId: "nexa-51c08",
-          storageBucket: "nexa-51c08.firebasestorage.app",
-          messagingSenderId: "124010138329",
-          appId: "1:124010138329:web:8c73c87483f2e28a5d8cc8"
+            apiKey: "AIzaSyAWFpGs1CCKLQ3NL45o81nPCMuKRqLgJHM",
+            databaseURL: "https://nexa-51c08-default-rtdb.firebaseio.com"
         };
-
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        let currentUser = JSON.parse(sessionStorage.getItem('nexa_session')) || null;
-        let selectedBase64Image = "";
-        let globalUsers = {};
-        let globalPosts = [];
+        // Funksiyalar
+        window.toggleAuthForms = () => {
+            document.getElementById('loginForm').classList.toggle('hidden');
+            document.getElementById('registerForm').classList.toggle('hidden');
+        };
 
-        function initRealtimeSync() {
-            onValue(ref(database, 'users'), (snapshot) => {
-                if(snapshot.exists()) {
-                    globalUsers = snapshot.val();
-                    if(!globalUsers["admin"]) {
-                        set(ref(database, 'users/admin'), { username: "admin", name: "Sistem Administratoru", pass: "nexa2026", followers: 150000, following: 120, verified: true, role: "superadmin", avatar: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" });
-                    }
-                    if(currentUser && globalUsers[currentUser.username]) {
-                        currentUser = globalUsers[currentUser.username];
-                        sessionStorage.setItem('nexa_session', JSON.stringify(currentUser));
-                    }
-                    populateAdminUsers();
-                    if(currentUser) renderProfile();
-                }
-            });
-
-            onValue(ref(database, 'posts'), (snapshot) => {
-                if(snapshot.exists()) {
-                    const data = snapshot.val();
-                    globalPosts = Object.keys(data).map(key => data[key]);
-                    globalPosts.sort((a,b) => b.id - a.id);
-                } else {
-                    globalPosts = [];
-                }
-                renderFeed();
-                if(currentUser) renderProfile();
-            });
-        }
-
-        window.handleLogin = function() {
-            const user = document.getElementById('loginUser').value.trim().toLowerCase();
-            const pass = document.getElementById('loginPass').value;
-            
-            if(globalUsers[user] && globalUsers[user].pass === pass) {
-                currentUser = globalUsers[user];
-                sessionStorage.setItem('nexa_session', JSON.stringify(currentUser));
-                hydrateApp();
-            } else { alert('İstifadəçi adı və ya şifrə yanlışdır!'); }
-        }
-
-        window.handleRegister = function() {
+        window.handleRegister = async () => {
             const user = document.getElementById('regUser').value.trim().toLowerCase();
             const name = document.getElementById('regName').value.trim();
             const pass = document.getElementById('regPass').value;
-            if(!user || !name || !pass) return alert('Bütün xanaları doldurun!');
-            if(globalUsers[user]) return alert('Bu istifadəçi adı artıq mövcuddur!');
-
-            const newUser = { username: user, name: name, pass: pass, followers: 0, following: 0, verified: false, role: "user", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" };
-            set(ref(database, 'users/' + user), newUser).then(() => {
-                alert('Qeydiyyat tamamlandı! Giriş edə bilərsiniz.');
+            
+            if(!user || !name || !pass) return alert('Boş xana qoymayın!');
+            
+            try {
+                const snapshot = await get(child(ref(database), 'users/' + user));
+                if(snapshot.exists()) return alert('İstifadəçi artıq mövcuddur!');
+                
+                await set(ref(database, 'users/' + user), { username: user, name: name, pass: pass });
+                alert('Qeydiyyat uğurludur!');
                 toggleAuthForms();
-            });
-        }
+            } catch(e) { alert('Xəta: ' + e.message); }
+        };
 
-        function hydrateApp() {
-            document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('currentAvatar').src = currentUser.avatar;
+        window.handleLogin = async () => {
+            const user = document.getElementById('loginUser').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPass').value;
             
-            const isAdm = currentUser.role === 'superadmin' || currentUser.username === 'admin';
-            document.getElementById('adminNav').style.display = isAdm ? 'flex' : 'none';
-            document.getElementById('mobileAdminBtn').style.display = isAdm ? 'flex' : 'none';
-
-            renderStories(); renderExplore(); renderMessages(); renderProfile();
-        }
-
-        window.switchScreen = function(screenId, element) {
-            document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
-            
-            document.getElementById(screenId).classList.add('active');
-            if(element) element.classList.add('active');
-        }
-
-        window.switchMobileNav = function(screenId, element) {
-            window.switchScreen(screenId, null);
-            if(element) element.classList.add('active');
-        }
-
-        window.previewGalleryFile = function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    selectedBase64Image = e.target.result;
-                    document.getElementById('imagePreview').src = selectedBase64Image;
-                    document.getElementById('imagePreviewContainer').style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        window.clearSelectedImage = function() {
-            selectedBase64Image = "";
-            document.getElementById('galleryFileInput').value = "";
-            document.getElementById('imagePreviewContainer').style.display = 'none';
-        }
-
-        window.addNewPost = function() {
-            const caption = document.getElementById('postInput').value.trim();
-            if(!caption && !selectedBase64Image) return alert("Paylaşım üçün mətn yazın və ya şəkil seçin!");
-
-            const postId = Date.now();
-            const newPostData = {
-                id: postId,
-                username: currentUser.username,
-                caption: caption,
-                image: selectedBase64Image || null,
-                time: "İndi", likes: 0, liked: false
-            };
-
-            set(ref(database, 'posts/' + postId), newPostData).then(() => {
-                document.getElementById('postInput').value = "";
-                window.clearSelectedImage();
-            });
-        }
-
-        function renderFeed() {
-            document.getElementById('feedPostsDynamic').innerHTML = globalPosts.map(post => {
-                const userMeta = globalUsers[post.username] || { name: post.username, verified: false, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150' };
-                return `
-                    <div class="nexa-post">
-                        <div class="post-header">
-                            <div class="post-user-info">
-                                <img src="${userMeta.avatar}" class="post-user-avatar">
-                                <div class="user-details">
-                                    <div class="username-line">
-                                        <span>${userMeta.name}</span>
-                                        ${userMeta.verified ? '<i class="fa-solid fa-circle-check verified-badge"></i>' : ''}
-                                    </div>
-                                    <span class="post-time">${post.time}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post-caption">${post.caption}</div>
-                        ${post.image ? `<div class="post-media-ctx"><img src="${post.image}"></div>` : ''}
-                        <div class="post-actions-bar">
-                            <div class="action-item" onclick="toggleLike('${post.id}', ${post.likes})">
-                                <i class="fa-regular fa-heart"></i><span>${post.likes}</span>
-                            </div>
-                            <div class="action-item"><i class="fa-regular fa-comment"></i><span>0</span></div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.toggleLike = function(postId, currentLikes) {
-            update(ref(database, 'posts/' + postId), {
-                likes: currentLikes + 1
-            });
-        }
-
-        function renderStories() {
-            const mockStories = [
-                { username: "Sən", avatar: currentUser ? currentUser.avatar : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" },
-                { username: "Nazir", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150" },
-                { username: "Tahir", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" }
-            ];
-            document.getElementById('storiesContainer').innerHTML = mockStories.map(s => `
-                <div class="story-card">
-                    <div class="story-avatar-ctx"><img src="${s.avatar}"></div>
-                    <span class="story-username">${s.username}</span>
-                </div>
-            `).join('');
-        }
-
-        function renderExplore() {
-            const imgs = ["https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300","https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=300","https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=300"];
-            document.getElementById('exploreGrid').innerHTML = imgs.map(src => `<img src="${src}" style="width:100%; border-radius:8px; object-fit:cover; height:100px;">`).join('');
-        }
-
-        function renderMessages() {
-            document.getElementById('messagesBox').innerHTML = `
-                <div class="user-row" style="background:rgba(255,255,255,0.02); margin-bottom:8px; border-radius:10px; padding:10px;">
-                    <div><strong style="color:var(--accent-blue);">Tahir</strong><br><span style="font-size:12px;">Salam, sistem Firebase ilə əla işləyir! 🔥</span></div>
-                    <span style="font-size:11px; color:var(--text-muted);">İndi</span>
-                </div>`;
-        }
-
-        function renderProfile() {
-            const u = globalUsers[currentUser.username] || currentUser;
-            document.getElementById('profAvatar').src = u.avatar;
-            document.getElementById('profFullName').innerHTML = `${u.name} ${u.verified ? '<i class="fa-solid fa-circle-check verified-badge"></i>' : ''}`;
-            document.getElementById('profUsername').innerText = `@${u.username}`;
-            document.getElementById('statFollowers').innerText = Number(u.followers).toLocaleString();
-            document.getElementById('statFollowing').innerText = Number(u.following).toLocaleString();
-            
-            const myPostsCount = globalPosts.filter(p => p.username === currentUser.username).length;
-            document.getElementById('statPostsCount').innerText = myPostsCount;
-        }
-
-        function populateAdminUsers() {
-            const select = document.getElementById('adminUserSelect');
-            if(!select) return;
-            
-            const currentSelected = select.value;
-            select.innerHTML = Object.keys(globalUsers).map(k => `<option value="${k}">${globalUsers[k].name} (@${k})</option>`).join('');
-            
-            if(currentSelected && globalUsers[currentSelected]) {
-                select.value = currentSelected;
-            }
-
-            document.getElementById('adminSystemUserList').innerHTML = Object.keys(globalUsers).map(k => `
-                <div class="user-row">
-                    <div><strong>${globalUsers[k].name}</strong> <span style="font-size:11px; color:var(--text-muted);">(@${k})</span></div>
-                    <span>${globalUsers[k].verified ? '✅ Tik' : '❌ Adi'}</span>
-                </div>
-            `).join('');
-
-            window.loadUserMetaToAdmin();
-        }
-
-        window.loadUserMetaToAdmin = function() {
-            const select = document.getElementById('adminUserSelect');
-            if(!select || !select.value) return;
-            const u = globalUsers[select.value];
-            if(u) {
-                document.getElementById('adminVerification').value = u.verified ? "true" : "false";
-                document.getElementById('adminFollowerCount').value = u.followers;
-                document.getElementById('adminFollowingCount').value = u.following;
-            }
-        }
-
-        window.saveAdminModifications = function() {
-            const key = document.getElementById('adminUserSelect').value;
-            if(globalUsers[key]) {
-                const updates = {
-                    verified: document.getElementById('adminVerification').value === "true",
-                    followers: parseInt(document.getElementById('adminFollowerCount').value) || 0,
-                    following: parseInt(document.getElementById('adminFollowingCount').value) || 0
-                };
-                update(ref(database, 'users/' + key), updates).then(() => {
-                    alert("Firebase server verilənləri yeniləndi!");
-                });
-            }
-        }
-
-        window.toggleAuthForms = function() {
-            document.getElementById('loginForm').classList.toggle('hidden');
-            document.getElementById('registerForm').classList.toggle('hidden');
-        }
-
-        window.logout = function() { sessionStorage.removeItem('nexa_session'); window.location.reload(); }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            initRealtimeSync();
-            if (currentUser) { hydrateApp(); } else { document.getElementById('authScreen').classList.remove('hidden'); }
-        });
-    </script>
-</body>
-</html>
+            try {
+                const snapshot = await get(child(ref(database), 'users
