@@ -49,9 +49,9 @@
         .scrollable-content { flex: 1; overflow-y: auto; scrollbar-width: none; }
         .scrollable-content::-webkit-scrollbar { display: none; }
 
-        /* STORIES (Yalnız Real İstifadəçilər) */
+        /* STORIES (24 saatlıq hekayə sistemi) */
         .stories-container { display: flex; padding: 15px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); overflow-x: auto; gap: 14px; scrollbar-width: none; }
-        .story-wrapper { display: flex; flex-direction: column; align-items: center; min-width: 68px; }
+        .story-wrapper { display: flex; flex-direction: column; align-items: center; min-width: 68px; cursor: pointer; }
         .story-avatar-box { width: 64px; height: 64px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, #00d2ff, #3b82f6, #9333ea); display: flex; justify-content: center; align-items: center; }
         .story-avatar-box img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg-main); }
         .story-wrapper span { font-size: 11px; margin-top: 6px; max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -65,7 +65,7 @@
         .post-user-img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; margin-right: 10px; }
         .post-username { font-size: 14px; font-weight: 600; display: flex; align-items: center; }
         .post-caption { padding: 0 16px 10px 16px; font-size: 14px; color: #e5e7eb; }
-        .post-media-container { width: 100%; background: #000; }
+        .post-media-container { width: 100%; background: #000; position: relative; }
         .post-media { width: 100%; height: auto; max-height: 400px; object-fit: cover; display: block; }
         .post-actions { display: flex; padding: 12px 16px; gap: 20px; font-size: 14px; }
         .action-item { display: flex; align-items: center; gap: 6px; cursor: pointer; }
@@ -102,19 +102,28 @@
         .msg-bubble { max-width: 70%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
         .msg-bubble.sent { background: var(--accent-blue); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
         .msg-bubble.received { background: var(--bg-box); color: white; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .chat-input-row { display: flex; padding: 12px; background: var(--bg-box); border-top: 1px solid rgba(255,255,255,0.08); gap: 10px; }
+        .chat-input-row { display: flex; padding: 12px; background: var(--bg-box); border-top: 1px solid rgba(255,255,255,0.08); gap: 10px; align-items: center; }
         .chat-input-row input { flex: 1; padding: 12px; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; }
-        .chat-input-row button { padding: 0 16px; background: var(--accent-blue); border: none; color: white; border-radius: 10px; font-weight: bold; }
+        .chat-input-row button { padding: 12px 16px; background: var(--accent-blue); border: none; color: white; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .audio-btn { background: #1e293b !important; color: #ef4444 !important; font-size: 16px; }
+        .audio-btn.recording { background: #ef4444 !important; color: white !important; animation: pulse 1s infinite; }
 
         /* --- PROFİL SƏHİFƏSİ --- */
-        .profile-screen { overflow-y: auto; padding-bottom: 20px; }
-        .profile-header { padding: 20px 16px; text-align: center; }
+        .profile-screen { overflow-y: auto; padding-bottom: 20px; height: 100%; }
+        .profile-header { padding: 20px 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .profile-avatar-main { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-blue); }
         .profile-name-title { font-size: 20px; font-weight: 700; margin-top: 10px; display: flex; align-items: center; justify-content: center; }
+        .profile-bio { font-size: 13px; color: var(--text-muted); margin-top: 6px; padding: 0 20px; line-height: 1.4; }
         .profile-stats { display: flex; justify-content: center; gap: 30px; margin-top: 15px; background: rgba(11, 18, 44, 0.5); padding: 12px; border-radius: 12px; }
         .stat-item { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: var(--text-muted); }
         .stat-item strong { font-size: 16px; color: white; }
-        .admin-trigger-btn { margin: 15px auto; padding: 8px 16px; background: transparent; border: 1px solid #ef4444; color: #ef4444; border-radius: 20px; font-size: 12px; cursor: pointer; display: none; font-weight: bold; }
+        
+        .profile-edit-section { padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px; margin: 12px 16px; display: flex; flex-direction: column; gap: 8px; border: 1px solid rgba(59,130,246,0.1); }
+        .profile-edit-section input, .profile-edit-section textarea { padding: 10px; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 13px; }
+        .profile-posts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 10px 16px; }
+        .grid-media-item { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #000; border-radius: 4px; cursor: pointer; }
+
+        .admin-trigger-btn { margin: 15px auto 0 auto; padding: 8px 16px; background: transparent; border: 1px solid #ef4444; color: #ef4444; border-radius: 20px; font-size: 12px; cursor: pointer; display: none; font-weight: bold; }
 
         /* --- ADMİN --- */
         .admin-screen { padding: 20px; overflow-y: auto; }
@@ -122,11 +131,46 @@
         .admin-control-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 14px; }
         .admin-btn-sm { padding: 6px 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; }
         .num-input { width: 70px; padding: 4px; background: var(--bg-main); border: 1px solid var(--accent-blue); color: white; text-align: center; border-radius: 4px; }
+
+        /* --- ZƏNG MODAL sistemi --- */
+        .call-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2,5,18,0.96); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
+        .call-avatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--accent-glow); margin-bottom: 20px; object-fit: cover; }
+        .call-status { font-size: 14px; color: var(--accent-glow); margin-top: 10px; letter-spacing: 2px; text-transform: uppercase; }
+        .call-actions { display: flex; gap: 30px; margin-top: 60px; }
+        .call-btn { width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; color: white; cursor: pointer; border: none; }
+        .call-btn.decline { background: #ef4444; }
+        #local-video-stream { width: 100%; height: 100%; position: absolute; top:0; left:0; object-fit: cover; z-index: -1; display: none; }
+
+        /* STORY DETAL MODAL */
+        .story-view-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 500; display: none; flex-direction: column; }
+        .story-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.3); position: absolute; top: 10px; left: 0; }
+        .story-progress-fill { height: 100%; width: 0%; background: var(--accent-glow); transition: width 4.8s linear; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="phone-container">
+
+    <div id="call-screen" class="call-modal">
+        <video id="local-video-stream" autoplay muted playsinline></video>
+        <img id="call-screen-img" src="" class="call-avatar">
+        <h2 id="call-screen-name">İstifadəçi</h2>
+        <div class="call-status" id="call-status-text">Zəng olunur...</div>
+        <div class="call-actions">
+            <button class="call-btn decline" onclick="endSimulatedCall()"><i class="fa-solid fa-phone-slash"></i></button>
+        </div>
+    </div>
+
+    <div id="story-viewer" class="story-view-modal" onclick="closeStoryViewer()">
+        <div class="story-progress-bar"><div id="story-progress-fill" class="story-progress-fill"></div></div>
+        <div style="padding: 20px; display:flex; align-items:center; gap:10px; z-index:10; background:linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)">
+            <img id="story-viewer-avatar" src="" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+            <strong id="story-viewer-name"></strong>
+        </div>
+        <img id="story-viewer-img" src="" style="width:100%; height:100%; object-fit:contain; flex:1;">
+    </div>
 
     <div id="page-auth" class="page active">
         <div class="auth-screen">
@@ -201,11 +245,16 @@
     <div id="page-chatwindow" class="page">
         <div class="app-header">
             <div class="logo" id="chat-target-title">Çat</div>
-            <div class="header-actions"><i class="fa-solid fa-chevron-left" onclick="switchPage('chatlist')"></i></div>
+            <div class="header-actions">
+                <i class="fa-solid fa-phone" style="font-size:16px; margin-right:12px; color:var(--accent-glow); cursor:pointer;" onclick="startCall('voice')"></i>
+                <i class="fa-solid fa-video" style="font-size:16px; margin-right:15px; color:var(--accent-blue); cursor:pointer;" onclick="startCall('video')"></i>
+                <i class="fa-solid fa-chevron-left" onclick="switchPage('chatlist')"></i>
+            </div>
         </div>
         <div class="chat-window">
             <div class="chat-messages" id="chat-messages-box"></div>
             <div class="chat-input-row">
+                <button id="voice-record-btn" class="audio-btn" onclick="toggleVoiceRecording()"><i class="fa-solid fa-microphone"></i></button>
                 <input type="text" id="chat-msg-input" placeholder="Mesajınızı yazın...">
                 <button onclick="sendDirectMessage()">Göndər</button>
             </div>
@@ -219,8 +268,10 @@
         </div>
         <div class="profile-screen">
             <div class="profile-header">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="profile-avatar-main">
+                <img src="" id="my-profile-avatar" class="profile-avatar-main">
                 <div class="profile-name-title" id="my-profile-name">İstifadəçi <span id="my-profile-badge"></span></div>
+                <div class="profile-bio" id="my-profile-bio-text">Hələ heç bir bioqrafiya əlavə edilməyib.</div>
+                
                 <div class="profile-stats">
                     <div class="stat-item"><strong id="stat-posts-count">0</strong><span>Post</span></div>
                     <div class="stat-item"><strong id="stat-followers">0</strong><span>İzləyici</span></div>
@@ -228,6 +279,24 @@
                 </div>
                 <button id="admin-panel-btn" class="admin-trigger-btn" onclick="switchPage('admin')">⚙️ Admin Panelə Keç</button>
             </div>
+
+            <div class="profile-edit-section">
+                <h5 style="color:var(--accent-glow); font-size:12px; margin-bottom:5px;">PROFİLİ REDAKTƏ ET</h5>
+                <input type="text" id="edit-bio-input" placeholder="Bioqrafiyanı yenilə...">
+                <label class="file-upload-btn" style="padding: 6px; font-size:12px; margin:2px 0;">
+                    🖼️ Profil Şəklini Dəyiş
+                    <input type="file" id="edit-avatar-input" accept="image/*" style="display:none;" onchange="updateProfileAvatar(event)">
+                </label>
+                <button onclick="saveProfileBio()" style="padding:8px; background:var(--accent-blue); border:none; border-radius:6px; color:white; font-size:12px; font-weight:bold; cursor:pointer;">Məlumatları Saxla</button>
+                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin:5px 0;">
+                <label class="file-upload-btn" style="padding: 8px; font-size:12px; background:#101b42; border-color:#9333ea;">
+                    🔮 24s Story (Hekayə) Əlavə Et
+                    <input type="file" id="story-file-input" accept="image/*" style="display:none;" onchange="uploadStory(event)">
+                </label>
+            </div>
+
+            <div style="padding:10px 16px 0 16px; font-size:12px; font-weight:bold; color:var(--text-muted);">PAYLAŞIMLARIM</div>
+            <div class="profile-posts-grid" id="my-posts-grid"></div>
         </div>
     </div>
 
@@ -270,6 +339,12 @@
     let currentSelectedFileBase64 = "";
     let currentSelectedFileType = "";
     let activeChatTarget = "";
+    
+    // Səs yazmaq üçün köməkçi dəyişənlər
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecordingVoice = false;
+    let storyTimeout = null;
 
     function switchPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -286,6 +361,7 @@
         if(pageId === 'explore') { handleSearch(); }
         if(pageId === 'reels') { loadReelsData(); }
         if(pageId === 'chatlist') { loadChatUsersList(); }
+        if(pageId === 'admin') { loadAdminPanelData(); } // Admin funksiyası bura bağlandı!
     }
 
     function toggleMode() {
@@ -301,12 +377,10 @@
         if(!u || !p) return alert("Bütün xanaları doldurun!");
 
         if (isLogin) {
-            // Tamamilə Təhlükəsiz Özəl Admin Hesabı Girişi
             if(u === 'arifnazir2026' && p === 'arifnazir2007') {
                 currentUser = u;
                 localStorage.setItem('nexa_user', u);
-                // Admin mövcud deyilsə bazada avtomatik yaradırıq
-                db.ref('users/' + u).setValue({ username: u, pass: p, verified: true, followers: 9999, following: 0 });
+                db.ref('users/' + u).setValue({ username: u, pass: p, verified: true, followers: 9999, following: 0, avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150", bio: "NEXA Baş Administrator" });
                 document.getElementById('app-navbar').style.display = 'flex';
                 switchPage('feed');
                 return;
@@ -334,6 +408,7 @@
                         verified: false,
                         followers: 0,
                         following: 0,
+                        bio: "Nexa-da yeni rəqəmsal vətəndaş!",
                         avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
                     }).then(() => {
                         alert("Qeydiyyat uğurludur!");
@@ -351,23 +426,41 @@
         switchPage('auth');
     }
 
-    // --- STRATEGİK REALTIME MƏLUMAT AXINI (YALNIZ GERÇƏK İSTİFADƏÇİLƏR) ---
+    // --- REALTIME MƏLUMAT AXINI & HESAB AYARLARI INTEGRASIYASI ---
     function loadFeedData() {
-        // Hekayələr yerinə qeydiyyatdan keçən gerçək insanları gətiririk
-        db.ref('users').once('value', snap => {
+        // Real vaxtda 24 saatı keçməmiş hekayələri təmizlə və gətir
+        const indi = Date.now();
+        db.ref('stories').once('value', snap => {
             const storiesBox = document.getElementById('stories-box');
             storiesBox.innerHTML = "";
-            if(snap.exists()) {
-                snap.forEach(userChild => {
-                    let uData = userChild.val();
-                    storiesBox.innerHTML += `
-                        <div class="story-wrapper">
-                            <div class="story-avatar-box"><img src="${uData.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}"></div>
-                            <span>${userChild.key}</span>
-                        </div>
-                    `;
-                });
-            }
+            
+            // İlk olaraq şəxsi istifadəçi profilini story əlavə etmək üçün ən başa qoyuruq
+            db.ref('users/' + currentUser).once('value', meSnap => {
+                let me = meSnap.val() || {};
+                storiesBox.innerHTML = `
+                    <div class="story-wrapper" onclick="switchPage('profile')">
+                        <div class="story-avatar-box" style="background: #101b42;"><img src="${me.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}"></div>
+                        <span style="color:var(--accent-glow)">+ Sənin Story</span>
+                    </div>
+                `;
+
+                if(snap.exists()) {
+                    snap.forEach(storyChild => {
+                        let sData = storyChild.val();
+                        // 24 saatlıq (86400000 millisaniyə) yoxlanış linki
+                        if(indi - sData.timestamp > 86400000) {
+                            db.ref('stories/' + storyChild.key).remove(); // Köhnəlibsə bazadan avtomatik sil
+                        } else {
+                            storiesBox.innerHTML += `
+                                <div class="story-wrapper" onclick="viewStory('${sData.author}', '${sData.media}', '${sData.avatar}')">
+                                    <div class="story-avatar-box"><img src="${sData.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}"></div>
+                                    <span>${sData.author}</span>
+                                </div>
+                            `;
+                        }
+                    });
+                }
+            });
         });
 
         // Həqiqi Postlar Axını
@@ -383,8 +476,9 @@
                 let post = data[key];
                 let mediaHtml = "";
                 if(post.media) {
-                    if(post.mediaType && post.mediaType.startsWith('video')) {
-                        mediaHtml = `<div class="post-media-container"><video src="${post.media}" class="post-media" controls></video></div>`;
+                    if(post.mediaType && post.mediaType.includes('video')) {
+                        // Videoların səliqəli açılması üçün bütün zəruri parametrlər düzəldildi
+                        mediaHtml = `<div class="post-media-container"><video src="${post.media}" class="post-media" controls playsinline preload="metadata"></video></div>`;
                     } else {
                         mediaHtml = `<div class="post-media-container"><img src="${post.media}" class="post-media"></div>`;
                     }
@@ -394,7 +488,7 @@
                     <div class="post-card">
                         <div class="post-header">
                             <div class="post-user-info">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="post-user-img">
+                                <img src="${post.authorAvatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}" class="post-user-img">
                                 <div class="post-username">${post.author} ${tik}</div>
                             </div>
                         </div>
@@ -409,7 +503,47 @@
         });
     }
 
-    // --- QALEREYADAN ŞƏKİL/VİDEO SEÇİMİ (BASE64 FORMAT) ---
+    // --- STORY AYARLARI ---
+    function uploadStory(event) {
+        const file = event.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            db.ref('users/' + currentUser).once('value').then(userSnap => {
+                let userData = userSnap.val() || {};
+                db.ref('stories').push({
+                    author: currentUser,
+                    avatar: userData.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
+                    media: e.target.result,
+                    timestamp: Date.now()
+                }).then(() => {
+                    alert("Hekayəniz uğurla paylaşıldı və 24 saat ərzində görünəcək!");
+                    loadFeedData();
+                });
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function viewStory(author, media, avatar) {
+        document.getElementById('story-viewer-name').innerText = "@" + author;
+        document.getElementById('story-viewer-avatar').src = avatar;
+        document.getElementById('story-viewer-img').src = media;
+        document.getElementById('story-viewer').style.display = 'flex';
+        
+        const fill = document.getElementById('story-progress-fill');
+        fill.style.width = '0%';
+        setTimeout(() => { fill.style.width = '100%'; }, 50);
+
+        storyTimeout = setTimeout(() => { closeStoryViewer(); }, 5000);
+    }
+
+    function closeStoryViewer() {
+        document.getElementById('story-viewer').style.display = 'none';
+        clearTimeout(storyTimeout);
+    }
+
+    // --- FILE SELECTION (POSTS) ---
     function handleFileSelect(event) {
         const file = event.target.files[0];
         if(!file) return;
@@ -419,7 +553,7 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             currentSelectedFileBase64 = e.target.result;
-            document.getElementById('file-preview-status').innerText = "✅ Fayl uğurla seçildi (" + file.name.substring(0,15) + "...)";
+            document.getElementById('file-preview-status').innerText = "✅ Fayl hazır (" + file.name.substring(0,15) + "...)";
         };
         reader.readAsDataURL(file);
     }
@@ -431,10 +565,12 @@
         db.ref('users/' + currentUser).once('value').then(snap => {
             let uData = snap.val() || {};
             let isVerified = uData.verified || false;
+            let currentAvatar = uData.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
 
             const newPostRef = db.ref('posts').push();
             newPostRef.set({
                 author: currentUser,
+                authorAvatar: currentAvatar,
                 caption: caption,
                 media: currentSelectedFileBase64 || null,
                 mediaType: currentSelectedFileType || null,
@@ -455,7 +591,7 @@
         db.ref('posts/' + key + '/likes').transaction(c => (c || 0) + 1);
     }
 
-    // --- REELS BÖLMƏSİ (YALNIZ VİDEOLAR) ---
+    // --- REELS BÖLMƏSİ (VİDEOLAR) ---
     function loadReelsData() {
         const reelsBox = document.getElementById('reels-box');
         reelsBox.innerHTML = "";
@@ -463,7 +599,7 @@
             if(!snap.exists()) return;
             snap.forEach(child => {
                 let post = child.val();
-                if(post.media && post.mediaType && post.mediaType.startsWith('video')) {
+                if(post.media && post.mediaType && post.mediaType.includes('video')) {
                     reelsBox.innerHTML += `
                         <div class="reel-video-wrapper">
                             <video src="${post.media}" class="reel-video" autoplay loop muted playsinline onclick="this.paused ? this.play() : this.pause()"></video>
@@ -481,83 +617,159 @@
         });
     }
 
-    // --- AXTARIŞ VƏ HƏQİQİ TAKİP SİSTEMİ ---
-    function handleSearch() {
-        const query = document.getElementById('search-input-field').value.trim().toLowerCase();
-        db.ref('users').once('value', snap => {
-            const resBox = document.getElementById('search-results-box');
-            resBox.innerHTML = "";
-            if(!snap.exists()) return;
-
-            snap.forEach(child => {
-                let username = child.key;
-                if(username === currentUser) return; // Özünü axtara bilməz
-                if(query && !username.includes(query)) return;
-
-                db.ref(`follows/${currentUser}/${username}`).once('value', followSnap => {
-                    let isFollowing = followSnap.exists();
-                    let btnText = isFollowing ? "Takipdəsən" : "Takip Et";
-                    let btnClass = isFollowing ? "follow-btn following" : "follow-btn";
-
-                    resBox.innerHTML += `
-                        <div class="user-list-item">
-                            <div class="user-list-info">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" style="width:40px; height:40px; border-radius:50%; margin-right:12px;">
-                                <strong>@${username}</strong>
-                            </div>
-                            <button class="${btnClass}" onclick="toggleFollow('${username}', ${isFollowing})">${btnText}</button>
-                        </div>
-                    `;
-                });
+    // --- PROFILE BIO & AVATAR EDIT ---
+    function updateProfileAvatar(event) {
+        const file = event.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            db.ref('users/' + currentUser).update({ avatar: e.target.result }).then(() => {
+                alert("Profil şəkli yeniləndi!");
+                loadMyProfile();
             });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function saveProfileBio() {
+        const bioTxt = document.getElementById('edit-bio-input').value.trim();
+        db.ref('users/' + currentUser).update({ bio: bioTxt }).then(() => {
+            alert("Bioqrafiya yadda saxlanıldı!");
+            loadMyProfile();
         });
     }
 
-    function toggleFollow(targetUser, isFollowing) {
-        if(isFollowing) {
-            // Takipdən çıx
-            db.ref(`follows/${currentUser}/${targetUser}`).remove();
-            db.ref(`users/${currentUser}/following`).transaction(c => (c || 1) - 1);
-            db.ref(`users/${targetUser}/followers`).transaction(c => (c || 1) - 1);
+    function loadMyProfile() {
+        document.getElementById('profile-header-name').innerText = "@" + currentUser;
+        
+        if(currentUser === 'arifnazir2026') {
+            document.getElementById('admin-panel-btn').style.display = "block";
         } else {
-            // Takip et
-            db.ref(`follows/${currentUser}/${targetUser}`).set(true);
-            db.ref(`users/${currentUser}/following`).transaction(c => (c || 0) + 1);
-            db.ref(`users/${targetUser}/followers`).transaction(c => (c || 0) + 1);
+            document.getElementById('admin-panel-btn').style.display = "none";
         }
-        setTimeout(handleSearch, 400); // Ekranı yenilə
-    }
 
-    // --- REALTIME MESAJLAŞMA (DIRECT MESSAGE) SİSTEMİ ---
-    function loadChatUsersList() {
-        db.ref('users').once('value', snap => {
-            const box = document.getElementById('chat-users-box');
-            box.innerHTML = "";
+        db.ref('users/' + currentUser).on('value', snap => {
             if(!snap.exists()) return;
-            snap.forEach(child => {
-                if(child.key === currentUser) return;
-                box.innerHTML += `
-                    <div class="user-list-item" onclick="openChatWindow('${child.key}')" style="cursor:pointer;">
-                        <div class="user-list-info">
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" style="width:45px; height:45px; border-radius:50%; margin-right:12px;">
-                            <div>
-                                <strong>@${child.key}</strong>
-                                <div style="font-size:12px; color:var(--text-muted);">Söhbətə başlamaq üçün toxunun</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
+            let d = snap.val();
+            document.getElementById('my-profile-avatar').src = d.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
+            document.getElementById('my-profile-bio-text').innerText = d.bio || "Hələ heç bir bioqrafiya əlavə edilməyib.";
+            document.getElementById('edit-bio-input').value = d.bio || "";
+            document.getElementById('stat-followers').innerText = d.followers || 0;
+            document.getElementById('stat-following').innerText = d.following || 0;
+            
+            if(d.verified) {
+                document.getElementById('my-profile-badge').innerHTML = `<i class="fa-solid fa-circle-check mavi-tik" style="font-size:16px;"></i>`;
+            } else {
+                document.getElementById('my-profile-badge').innerHTML = "";
+            }
+        });
+
+        // Şəxsi Postlarımızın Profil Səhifəsində Görünməsi Funksiyası
+        db.ref('posts').once('value').then(snap => {
+            let count = 0;
+            const gridBox = document.getElementById('my-posts-grid');
+            gridBox.innerHTML = "";
+            
+            if(snap.exists()) {
+                snap.forEach(p => { 
+                    let post = p.val();
+                    if(post.author === currentUser) {
+                        count++;
+                        if(post.media) {
+                            if(post.mediaType && post.mediaType.includes('video')) {
+                                gridBox.innerHTML += `<video src="${post.media}" class="grid-media-item" muted playsinline></video>`;
+                            } else {
+                                gridBox.innerHTML += `<img src="${post.media}" class="grid-media-item">`;
+                            }
+                        } else {
+                            gridBox.innerHTML += `<div class="grid-media-item" style="background:var(--bg-box); display:flex; align-items:center; justify-content:center; padding:5px; font-size:10px; color:white; overflow:hidden; text-align:center;">${post.caption}</div>`;
+                        }
+                    }
+                });
+            }
+            document.getElementById('stat-posts-count').innerText = count;
+            if(gridBox.innerHTML === "") {
+                gridBox.innerHTML = `<div style="grid-column: 1/4; text-align:center; padding:20px; font-size:12px; color:var(--text-muted);">Heç bir paylaşımınız yoxdur.</div>`;
+            }
         });
     }
 
-    function openChatWindow(targetUser) {
-        activeChatTarget = targetUser;
-        document.getElementById('chat-target-title').innerText = "@" + targetUser;
-        switchPage('chatwindow');
-        listenMessages();
+    // --- ÇATDA SƏSLİ MESAJLAŞMA (AUDIO) SİSTEMİ ---
+    function toggleVoiceRecording() {
+        const btn = document.getElementById('voice-record-btn');
+        if (!isRecordingVoice) {
+            // Səs qeydini başlat
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = event => { audioChunks.push(event.data); };
+                
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        let base64Audio = reader.result;
+                        sendAudioMessage(base64Audio);
+                    };
+                    reader.readAsDataURL(audioBlob);
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                isRecordingVoice = true;
+                btn.classList.add('recording');
+                btn.innerHTML = `<i class="fa-solid fa-stop"></i>`;
+            }).catch(err => { alert("Mikrofona icazə verilmədi və ya cihaz dəstəkləmir."); });
+        } else {
+            // Səs qeydini dayandır və göndər
+            mediaRecorder.stop();
+            isRecordingVoice = false;
+            btn.classList.remove('recording');
+            btn.innerHTML = `<i class="fa-solid fa-microphone"></i>`;
+        }
     }
 
+    function sendAudioMessage(base64Data) {
+        let chatID = currentUser < activeChatTarget ? `${currentUser}_${activeChatTarget}` : `${activeChatTarget}_${currentUser}`;
+        db.ref('messages/' + chatID).push({
+            sender: currentUser,
+            text: "[Səsli Mesaj]",
+            audio: base64Data,
+            timestamp: Date.now()
+        });
+    }
+
+    // --- SƏSLİ VƏ GÖRÜNTÜLÜ ZƏNG SİMULYASİYASI ---
+    function startCall(type) {
+        db.ref('users/' + activeChatTarget).once('value', snap => {
+            let target = snap.val() || {};
+            document.getElementById('call-screen-img').src = target.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
+            document.getElementById('call-screen-name').innerText = "@" + activeChatTarget;
+            document.getElementById('call-status-text').innerText = type === 'video' ? "Görüntülü Zəng Olunur..." : "Səsli Zəng Olunur...";
+            
+            const localVideo = document.getElementById('local-video-stream');
+            if(type === 'video') {
+                navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+                    localVideo.style.display = 'block';
+                    localVideo.srcObject = stream;
+                }).catch(e => console.log("Kamera aktivləşmədi."));
+            } else {
+                localVideo.style.display = 'none';
+            }
+            
+            document.getElementById('call-screen').style.display = 'flex';
+        });
+    }
+
+    function endSimulatedCall() {
+        const localVideo = document.getElementById('local-video-stream');
+        if(localVideo.srcObject) {
+            localVideo.srcObject.getTracks().forEach(track => track.stop());
+        }
+        document.getElementById('call-screen').style.display = 'none';
+    }
+
+    // --- REALTIME CHAT MESAJ DINLƏYICI ---
     function listenMessages() {
         let chatID = currentUser < activeChatTarget ? `${currentUser}_${activeChatTarget}` : `${activeChatTarget}_${currentUser}`;
         db.ref('messages/' + chatID).on('value', snap => {
@@ -567,7 +779,16 @@
             snap.forEach(child => {
                 let msg = child.val();
                 let mClass = msg.sender === currentUser ? "sent" : "received";
-                msgBox.innerHTML += `<div class="msg-bubble ${mClass}">${msg.text}</div>`;
+                
+                if(msg.audio) {
+                    msgBox.innerHTML += `
+                        <div class="msg-bubble ${mClass}" style="min-width:180px;">
+                            <span style="font-size:10px; opacity:0.7; display:block; margin-bottom:4px;">🎵 Səsli mesaj</span>
+                            <audio src="${msg.audio}" controls style="width:100%; height:30px;"></audio>
+                        </div>`;
+                } else {
+                    msgBox.innerHTML += `<div class="msg-bubble ${mClass}">${msg.text}</div>`;
+                }
             });
             msgBox.scrollTop = msgBox.scrollHeight;
         });
@@ -586,37 +807,82 @@
         inp.value = "";
     }
 
-    // --- PROFİL & ADMİN PANEL TƏHLÜKƏSİZLİYİ ---
-    function loadMyProfile() {
-        document.getElementById('profile-header-name').innerText = "@" + currentUser;
-        document.getElementById('my-profile-name').innerHTML = currentUser + ' <span id="my-profile-badge"></span>';
-        
-        // Yalnız ArifNazir2026 Giriş Etdikdə Admin Düyməsi Aktivləşir
-        if(currentUser === 'arifnazir2026') {
-            document.getElementById('admin-panel-btn').style.display = "block";
-        } else {
-            document.getElementById('admin-panel-btn').style.display = "none";
-        }
-
-        db.ref('users/' + currentUser).on('value', snap => {
+    function loadChatUsersList() {
+        db.ref('users').once('value', snap => {
+            const box = document.getElementById('chat-users-box');
+            box.innerHTML = "";
             if(!snap.exists()) return;
-            let d = snap.val();
-            document.getElementById('stat-followers').innerText = d.followers || 0;
-            document.getElementById('stat-following').innerText = d.following || 0;
-            if(d.verified) {
-                document.getElementById('my-profile-badge').innerHTML = `<i class="fa-solid fa-circle-check mavi-tik" style="font-size:16px;"></i>`;
-            }
-        });
-
-        db.ref('posts').once('value').then(snap => {
-            let count = 0;
-            if(snap.exists()) {
-                snap.forEach(p => { if(p.val().author === currentUser) count++; });
-            }
-            document.getElementById('stat-posts-count').innerText = count;
+            snap.forEach(child => {
+                if(child.key === currentUser) return;
+                let u = child.val();
+                box.innerHTML += `
+                    <div class="user-list-item" onclick="openChatWindow('${child.key}')" style="cursor:pointer;">
+                        <div class="user-list-info">
+                            <img src="${u.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; margin-right:12px;">
+                            <div>
+                                <strong>@${child.key}</strong>
+                                <div style="font-size:12px; color:var(--text-muted);">${u.bio ? u.bio.substring(0,30) + '...' : 'Söhbətə başlamaq üçün toxunun'}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
         });
     }
 
+    function openChatWindow(targetUser) {
+        activeChatTarget = targetUser;
+        document.getElementById('chat-target-title').innerText = "@" + targetUser;
+        switchPage('chatwindow');
+        listenMessages();
+    }
+
+    function handleSearch() {
+        const query = document.getElementById('search-input-field').value.trim().toLowerCase();
+        db.ref('users').once('value', snap => {
+            const resBox = document.getElementById('search-results-box');
+            resBox.innerHTML = "";
+            if(!snap.exists()) return;
+
+            snap.forEach(child => {
+                let username = child.key;
+                let u = child.val();
+                if(username === currentUser) return; 
+                if(query && !username.includes(query)) return;
+
+                db.ref(`follows/${currentUser}/${username}`).once('value', followSnap => {
+                    let isFollowing = followSnap.exists();
+                    let btnText = isFollowing ? "Takipdəsən" : "Takip Et";
+                    let btnClass = isFollowing ? "follow-btn following" : "follow-btn";
+
+                    resBox.innerHTML += `
+                        <div class="user-list-item">
+                            <div class="user-list-info">
+                                <img src="${u.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:12px;">
+                                <strong>@${username}</strong>
+                            </div>
+                            <button class="${btnClass}" onclick="toggleFollow('${username}', ${isFollowing})">${btnText}</button>
+                        </div>
+                    `;
+                });
+            });
+        });
+    }
+
+    function toggleFollow(targetUser, isFollowing) {
+        if(isFollowing) {
+            db.ref(`follows/${currentUser}/${targetUser}`).remove();
+            db.ref(`users/${currentUser}/following`).transaction(c => (c || 1) - 1);
+            db.ref(`users/${targetUser}/followers`).transaction(c => (c || 1) - 1);
+        } else {
+            db.ref(`follows/${currentUser}/${targetUser}`).set(true);
+            db.ref(`users/${currentUser}/following`).transaction(c => (c || 0) + 1);
+            db.ref(`users/${targetUser}/followers`).transaction(c => (c || 0) + 1);
+        }
+        setTimeout(handleSearch, 400);
+    }
+
+    // --- ADMİN PANEL DETALLI PROSESLƏR (TAM DÜZƏLDİLDİ) ---
     function loadAdminPanelData() {
         db.ref('users').on('value', (snapshot) => {
             const container = document.getElementById('admin-users-list');
