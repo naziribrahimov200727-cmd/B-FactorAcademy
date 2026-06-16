@@ -3,71 +3,724 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa | Rəqəmsal Ev</title>
+    <title>NEXA - Azərbaycanın Rəqəmsal Evi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #000; --accent: #ff0050; --border: #333; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
-        .view { display: none; padding: 15px; }
-        .active { display: block; }
-        
-        /* Post Dizaynı (image.png-dən ilhamlanaraq) */
-        .post { background: #111; border-radius: 15px; padding: 15px; margin-bottom: 20px; }
-        .user-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #444; }
-        .post-media { width: 100%; height: 250px; background: #222; border-radius: 10px; }
+        :root {
+            --bg-dark: #030712;
+            --surface-dark: #0b1329;
+            --surface-card: #111c44;
+            --accent-blue: #3b82f6;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: rgba(59, 130, 246, 0.2);
+            --neon-glow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
 
-        /* Navigasiya */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 15px 0; }
-        .btn { padding: 10px 20px; background: var(--accent); border: none; color: white; border-radius: 8px; cursor: pointer; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* Sol Menyu (Sidebar) */
+        .sidebar {
+            width: 260px;
+            background-color: var(--surface-dark);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 25px 15px;
+            z-index: 10;
+        }
+
+        .logo-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-svg {
+            width: 70px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #fff 30%, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            list-style: none;
+            margin-top: 20px;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-right: 15px;
+            width: 25px;
+            text-align: center;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), transparent);
+            color: var(--text-main);
+            border-left: 4px solid var(--accent-blue);
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Əsas Məzmun Sahəsi */
+        .main-content {
+            flex-grow: 1;
+            height: 100vh;
+            overflow-y: auto;
+            background: radial-gradient(circle at 50% 0%, #0d1b3e 0%, var(--bg-dark) 70%);
+            padding-bottom: 80px;
+        }
+
+        .feed-container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 25px 15px;
+        }
+
+        /* Storilər */
+        .stories-wrapper {
+            background: rgba(11, 19, 41, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stories-wrapper::-webkit-scrollbar { display: none; }
+
+        .story-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            min-width: 75px;
+        }
+
+        .story-avatar-ctx {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            box-shadow: var(--neon-glow);
+        }
+
+        .story-avatar-ctx img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--surface-dark);
+        }
+
+        .story-username {
+            font-size: 11px;
+            margin-top: 8px;
+            color: var(--text-main);
+            max-width: 70px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        /* Post Paylaşım Qutusu */
+        .create-post-box {
+            background: rgba(17, 28, 68, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .create-post-upper { display: flex; gap: 15px; }
+        .create-post-upper img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+
+        .create-post-input {
+            flex-grow: 1;
+            background: rgba(3, 7, 18, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            color: var(--text-main);
+            font-size: 14px;
+            resize: none;
+            outline: none;
+        }
+
+        .create-post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .media-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent-blue);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--neon-glow);
+        }
+
+        /* NEXA Post Dizaynı */
+        .nexa-post {
+            background: rgba(11, 19, 41, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .post-user-info { display: flex; align-items: center; gap: 12px; }
+        .post-user-avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); }
+
+        .user-details .username-line { display: flex; align-items: center; gap: 5px; font-weight: 600; font-size: 14px; }
+        .verified-badge { color: #3b82f6; font-size: 13px; }
+        .post-time { font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px; }
+        .post-caption { font-size: 14px; line-height: 1.5; margin-bottom: 15px; color: #e5e7eb; }
+
+        .post-media-ctx {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .post-media-ctx img { width: 100%; display: block; object-fit: cover; }
+
+        .live-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+        }
+
+        .post-actions-bar {
+            display: flex;
+            gap: 25px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 15px;
+        }
+
+        .action-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); cursor: pointer; font-size: 14px; }
+        .action-item.liked { color: #ef4444; }
+
+        /* Ekran Keçidləri */
+        .app-screen { display: none; }
+        .app-screen.active { display: block; }
+
+        /* Admin Panel */
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 25px; }
+        .admin-card { background: var(--surface-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; }
+        .admin-card h3 { margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; color: var(--accent-blue); }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+        .form-group input, .form-group select {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; color: white; outline: none;
+        }
+
+        .admin-btn {
+            width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;
+        }
+
+        .user-list-container { max-height: 300px; overflow-y: auto; margin-top: 10px; }
+        .user-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        /* Profil Səhifəsi */
+        .profile-header-box { background: rgba(17, 28, 68, 0.5); border: 1px solid var(--border-color); border-radius: 24px; padding: 30px; text-align: center; backdrop-filter: blur(10px); }
+        .profile-main-avatar { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent-blue); object-fit: cover; margin: 0 auto 15px auto; display: block; }
+        
+        .stats-row { display: flex; justify-content: center; gap: 40px; margin: 20px 0; }
+        .stat-node text { display: block; }
+        .stat-val { font-size: 20px; font-weight: 700; color: white; }
+        .stat-lbl { font-size: 12px; color: var(--text-muted); }
+
+        /* Giriş / Qeydiyyat Ekranı */
+        .auth-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-dark); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .auth-card { background: var(--surface-dark); border: 1px solid var(--border-color); width: 100%; max-width: 400px; border-radius: 24px; padding: 35px; box-shadow: var(--neon-glow); text-align: center; }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- Ana Səhifə (Feed) -->
-    <div id="home" class="view active">
-        <h2>Ana Səhifə</h2>
-        <div class="post">
-            <div class="user-header"><div class="avatar"></div><strong>Aylin_97</strong></div>
-            <div class="post-media"></div>
-            <p>Bakının gözəlliyi ✨🇦🇿</p>
+    <div id="authScreen" class="auth-overlay">
+        <div class="auth-card">
+            <svg class="logo-svg" viewBox="0 0 100 100" style="margin: 0 auto 15px auto; display: block;">
+                <path d="M20,60 C30,30 50,30 60,50 C70,70 80,40 90,50" fill="none" stroke="url(#logoGlow)" stroke-width="8" stroke-linecap="round"/>
+                <polygon points="50,15 53,27 65,30 53,33 50,45 47,33 35,30 47,27" fill="#ffffff"/>
+                <defs>
+                    <linearGradient id="logoGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ffffff"/>
+                        <stop offset="100%" stop-color="#3b82f6"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <h2 class="logo-text" style="margin-bottom: 25px;">NEXA</h2>
+            
+            <div id="loginForm">
+                <div class="form-group">
+                    <input type="text" id="loginUser" placeholder="İstifadəçi adı">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPass" placeholder="Şifrə">
+                </div>
+                <button class="admin-btn" onclick="handleLogin()" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">Giriş Et</button>
+                <p style="margin-top: 15px; font-size: 13px; color: var(--text-muted);">
+                    Hesabınız yoxdur? <span onclick="toggleAuthForms()" style="color: var(--accent-blue); cursor: pointer;">Qeydiyyatdan keçin</span>
+                </p>
+            </div>
+
+            <div id="registerForm" class="hidden">
+                <div class="form-group">
+                    <input type="text" id="regUser" placeholder="İstifadəçi adı">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="regName" placeholder="Ad və Soyad">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regPass" placeholder="Şifrə">
+                </div>
+                <button class="admin-btn" onclick="handleRegister()" style="background: linear-gradient(135deg, #10b981, #059669);">Qeydiyyatı Tamamla</button>
+                <p style="margin-top: 15px; font-size: 13px; color: var(--text-muted);">
+                    Hesabınız var? <span onclick="toggleAuthForms()" style="color: var(--accent-blue); cursor: pointer;">Giriş edin</span>
+                </p>
+            </div>
         </div>
     </div>
 
-    <!-- Axtarış -->
-    <div id="search" class="view">
-        <h2>Axtarış</h2>
-        <input type="text" placeholder="İnsanları axtar..." style="width: 100%; padding: 10px; border-radius: 5px;">
-    </div>
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <svg class="logo-svg" viewBox="0 0 100 100">
+                    <path d="M20,60 C30,30 50,30 60,50 C70,70 80,40 90,50" fill="none" stroke="url(#sidebarGlow)" stroke-width="8" stroke-linecap="round"/>
+                    <polygon points="50,15 53,27 65,30 53,33 50,45 47,33 35,30 47,27" fill="#ffffff"/>
+                    <defs>
+                        <linearGradient id="sidebarGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="100%" stop-color="#3b82f6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1 class="logo-text">NEXA</h1>
+            </div>
 
-    <!-- Profil -->
-    <div id="profile" class="view">
-        <div style="text-align:center;">
-            <div class="avatar" style="width:100px; height:100px; margin:auto;"></div>
-            <h1>İstifadəçi Adı</h1>
-            <button class="btn" onclick="alert('Dostluq istəyi göndərildi!')">Dostluq At</button>
-        </div>
-    </div>
+            <nav class="nav-links">
+                <li class="nav-item active" onclick="switchScreen('feed-screen', this)"><i class="fa-solid fa-house"></i>Ana Səhifə</li>
+                <li class="nav-item" onclick="switchScreen('explore-screen', this)"><i class="fa-solid fa-compass"></i>Kəşf Et</li>
+                <li class="nav-item" onclick="switchScreen('reels-screen', this)"><i class="fa-solid fa-clapperboard"></i>Reels</li>
+                <li class="nav-item" onclick="switchScreen('messages-screen', this)"><i class="fa-solid fa-paper-plane"></i>Mesajlar</li>
+                <li class="nav-item" onclick="switchScreen('profile-screen', this)"><i class="fa-solid fa-user"></i>Profil</li>
+                <li class="nav-item" id="adminNav" onclick="switchScreen('admin-screen', this)" style="border-color: #ef4444; color: #f87171; display:none;"><i class="fa-solid fa-user-gear"></i>Admin Panel</li>
+            </nav>
 
-    <!-- Mesajlar -->
-    <div id="messages" class="view">
-        <h2>Mesajlar</h2>
-        <div style="padding:10px; border-bottom:1px solid #333;">Könül: Salam, necəsən?</div>
-        <div style="padding:10px; border-bottom:1px solid #333;">Ayhan: Videonu gördün?</div>
-    </div>
+            <div class="nav-item" onclick="logout()" style="margin-top: auto; color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i>Çıxış</div>
+        </aside>
 
-    <!-- Navigasiya -->
-    <nav class="bottom-nav">
-        <span onclick="show('home')">🏠</span>
-        <span onclick="show('search')">🔍</span>
-        <span onclick="show('profile')">👤</span>
-        <span onclick="show('messages')">💬</span>
-    </nav>
+        <main class="main-content">
+            
+            <div id="feed-screen" class="app-screen active">
+                <div class="feed-container">
+                    
+                    <div class="stories-wrapper" id="storiesContainer"></div>
+
+                    <div class="create-post-box">
+                        <div class="create-post-upper">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" id="currentAvatar" alt="Avatar">
+                            <textarea class="create-post-input" id="postInput" placeholder="Nə düşünürsünüz?" rows="2"></textarea>
+                        </div>
+                        <div class="create-post-actions">
+                            <button class="media-btn" onclick="triggerMockImageUpload()"><i class="fa-regular fa-image"></i> Şəkil Əlavə Et</button>
+                            <input type="hidden" id="postImageMockUrl" value="">
+                            <button class="share-btn" onclick="addNewPost()">Paylaş</button>
+                        </div>
+                    </div>
+
+                    <div id="feedPostsDynamic"></div>
+
+                </div>
+            </div>
+
+            <div id="explore-screen" class="app-screen">
+                <div class="feed-container">
+                    <h2 style="margin-bottom:20px;"><i class="fa-solid fa-compass"></i> Trend olan paylaşımlar</h2>
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;" id="exploreGrid"></div>
+                </div>
+            </div>
+
+            <div id="reels-screen" class="app-screen">
+                <div class="feed-container" style="max-width: 450px;">
+                    <div class="nexa-post" style="padding:0; overflow:hidden; position:relative; height: 75vh;">
+                        <span class="live-tag">REELS</span>
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600" style="width:100%; height:100%; object-fit:cover;">
+                        <div style="position:absolute; bottom:20px; left:20px; right:20px; background:linear-gradient(transparent, rgba(0,0,0,0.8)); padding:20px; border-radius:12px;">
+                            <h4 style="color:white;">@travel_az</h4>
+                            <p style="font-size:12px; color:#ddd; margin-top:5px;">Xəzər sahillərində möhtəşəm gün batımı... 🌅</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="messages-screen" class="app-screen">
+                <div class="feed-container">
+                    <h2><i class="fa-solid fa-envelope"></i> Gələn Mesajlar</h2>
+                    <div class="nexa-post" style="margin-top:20px; padding:15px;" id="messagesBox"></div>
+                </div>
+            </div>
+
+            <div id="profile-screen" class="app-screen">
+                <div class="feed-container">
+                    <div class="profile-header-box">
+                        <img src="" id="profAvatar" class="profile-main-avatar">
+                        <h2 id="profFullName" style="margin-top:15px; display:flex; align-items:center; justify-content:center; gap:5px;"></h2>
+                        <p id="profUsername" style="color:var(--text-muted); font-size:14px;"></p>
+                        
+                        <div class="stats-row">
+                            <div class="stat-node"><span class="stat-val" id="statFollowers">0</span><span class="stat-lbl">Takipçi</span></div>
+                            <div class="stat-node"><span class="stat-val" id="statFollowing">0</span><span class="stat-lbl">Takip</span></div>
+                            <div class="stat-node"><span class="stat-val">12</span><span class="stat-lbl">Paylaşımlar</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-screen" class="app-screen">
+                <div class="feed-container" style="max-width: 900px;">
+                    <h2><i class="fa-solid fa-user-gear" style="color:#ef4444;"></i> NEXA Core Server Admin Matrix</h2>
+                    
+                    <div class="admin-grid">
+                        <div class="admin-card">
+                            <h3>İstifadəçi Tənzimləmələri</h3>
+                            <div class="form-group">
+                                <label>İstifadəçi Seçin</label>
+                                <select id="adminUserSelect" onchange="loadUserMetaToAdmin()"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Mavi Tik Statusu (Verification)</label>
+                                <select id="adminVerification">
+                                    <option value="false">Yoxdur</option>
+                                    <option value="true">Aktiv Edilsin ✅</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Takipçi Sayı (Manipulyasiya)</label>
+                                <input type="number" id="adminFollowerCount" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Takip Etdiyi Sayı</label>
+                                <input type="number" id="adminFollowingCount" value="0">
+                            </div>
+                            <button class="admin-btn" onclick="saveAdminModifications()">Verilənləri Yenilə (Push Changes)</button>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3>Qalıcı İstifadəçi Bazası</h3>
+                            <div class="user-list-container" id="adminSystemUserList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
 
     <script>
-        function show(id) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+        const DEFAULT_SYSTEM_DATA = {
+            users: {
+                "admin": { username: "admin", name: "Sistem Administratoru", pass: "nexa2026", followers: 999999, following: 0, verified: true, role: "superadmin", avatar: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" },
+                "aylin_97": { username: "aylin_97", name: "Aylin Məmmədova", pass: "12345", followers: 2500, following: 180, verified: true, role: "user", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" },
+                "orxan.music": { username: "orxan.music", name: "Orxan Musayev", pass: "12345", followers: 12400, following: 320, verified: true, role: "user", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" }
+            },
+            posts: [
+                { id: 1, username: "aylin_97", caption: "Bakının gözəlliyi ✨🇦🇿", image: "https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?w=800", time: "2s əvvəl", likes: 2500, liked: false, live: false },
+                { id: 2, username: "orxan.music", caption: "Yeni mahnım artıq Nexada! 🎵 Dəstəyinizi gözləyirəm!", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800", time: "3s əvvəl", likes: 1200, liked: false, live: true }
+            ],
+            stories: [
+                { username: "Sən", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" },
+                { username: "Aysel", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" },
+                { username: "Orxan", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" },
+                { username: "Lalə", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150" },
+                { username: "Rəşad", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150" }
+            ],
+            messages: [
+                { from: "Tahir", text: "Salam layihənin son versiyasını göndər baxım.", time: "10 dəq əvvəl" },
+                { from: "Nazir", text: "B-FACTOR tədris mərkəzinin qeydiyyat botu hazırdır.", time: "1 saat əvvəl" }
+            ]
+        };
+
+        let db = JSON.parse(localStorage.getItem('nexa_database')) || DEFAULT_SYSTEM_DATA;
+        let currentUser = JSON.parse(sessionStorage.getItem('nexa_session')) || null;
+
+        function saveDB() { localStorage.setItem('nexa_database', JSON.stringify(db)); }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (currentUser) { hydrateApp(); } else { document.getElementById('authScreen').classList.remove('hidden'); }
+        });
+
+        function toggleAuthForms() {
+            document.getElementById('loginForm').classList.toggle('hidden');
+            document.getElementById('registerForm').classList.toggle('hidden');
         }
+
+        function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPass').value;
+            
+            if(db.users[user] && db.users[user].pass === pass) {
+                currentUser = db.users[user];
+                sessionStorage.setItem('nexa_session', JSON.stringify(currentUser));
+                hydrateApp();
+            } else { alert('İstifadəçi adı və ya şifrə yanlışdır!'); }
+        }
+
+        function handleRegister() {
+            const user = document.getElementById('regUser').value.trim().toLowerCase();
+            const name = document.getElementById('regName').value.trim();
+            const pass = document.getElementById('regPass').value;
+
+            if(!user || !name || !pass) return alert('Bütün sahələri doldurun!');
+            if(db.users[user]) return alert('Bu istifadəçi adı artıq tutulub!');
+
+            db.users[user] = { username: user, name: name, pass: pass, followers: 0, following: 0, verified: false, role: "user", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" };
+            saveDB();
+            alert('Qeydiyyat uğurludur! Giriş edə bilərsiniz.');
+            toggleAuthForms();
+        }
+
+        function hydrateApp() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('currentAvatar').src = currentUser.avatar;
+            
+            if(currentUser.role === 'superadmin' || currentUser.username === 'admin') {
+                document.getElementById('adminNav').style.display = 'flex';
+            } else {
+                document.getElementById('adminNav').style.display = 'none';
+            }
+
+            renderStories();
+            renderFeed();
+            renderExplore();
+            renderMessages();
+            renderProfile();
+            populateAdminUsers();
+        }
+
+        function switchScreen(screenId, element) {
+            document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            if(element) element.classList.add('active');
+        }
+
+        function renderStories() {
+            document.getElementById('storiesContainer').innerHTML = db.stories.map(s => `
+                <div class="story-card">
+                    <div class="story-avatar-ctx"><img src="${s.avatar}"></div>
+                    <span class="story-username">${s.username}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderFeed() {
+            document.getElementById('feedPostsDynamic').innerHTML = db.posts.map(post => {
+                const userMeta = db.users[post.username] || { name: post.username, verified: false, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150' };
+                return `
+                    <div class="nexa-post">
+                        <div class="post-header">
+                            <div class="post-user-info">
+                                <img src="${userMeta.avatar}" class="post-user-avatar">
+                                <div class="user-details">
+                                    <div class="username-line">
+                                        <span>${userMeta.name}</span>
+                                        ${userMeta.verified ? '<i class="fa-solid fa-circle-check verified-badge"></i>' : ''}
+                                    </div>
+                                    <span class="post-time">${post.time}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-caption">${post.caption}</div>
+                        ${post.image ? `<div class="post-media-ctx">${post.live ? '<span class="live-tag">Canlı</span>' : ''}<img src="${post.image}"></div>` : ''}
+                        <div class="post-actions-bar">
+                            <div class="action-item ${post.liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                                <i class="${post.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i><span>${post.likes}</span>
+                            </div>
+                            <div class="action-item"><i class="fa-regular fa-comment"></i><span>152</span></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function triggerMockImageUpload() {
+            const urls = [
+                "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800",
+                "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800"
+            ];
+            document.getElementById('postImageMockUrl').value = urls[Math.floor(Math.random() * urls.length)];
+            alert("Sistem şəbəkəsindən yüksək keyfiyyətli şəkil əlavə olundu!");
+        }
+
+        function addNewPost() {
+            const caption = document.getElementById('postInput').value.trim();
+            const imgUrl = document.getElementById('postImageMockUrl').value;
+            if(!caption && !imgUrl) return alert("Boş post paylaşıla bilməz!");
+
+            db.posts.unshift({ id: Date.now(), username: currentUser.username, caption: caption, image: imgUrl || null, time: "İndi", likes: 0, liked: false, live: false });
+            saveDB();
+            document.getElementById('postInput').value = "";
+            document.getElementById('postImageMockUrl').value = "";
+            renderFeed();
+        }
+
+        function toggleLike(postId) {
+            const post = db.posts.find(p => p.id === postId);
+            if(post) {
+                post.liked ? (post.likes--, post.liked = false) : (post.likes++, post.liked = true);
+                saveDB(); renderFeed();
+            }
+        }
+
+        function renderExplore() {
+            const imgs = ["https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300","https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=300","https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=300"];
+            document.getElementById('exploreGrid').innerHTML = imgs.map(src => `<img src="${src}" style="width:100%; border-radius:8px; object-fit:cover; height:120px;">`).join('');
+        }
+
+        function renderMessages() {
+            document.getElementById('messagesBox').innerHTML = db.messages.map(m => `
+                <div class="user-row" style="background:rgba(255,255,255,0.02); margin-bottom:10px; border-radius:10px; padding:12px;">
+                    <div><strong style="color:var(--accent-blue);">${m.from}</strong><br><span style="font-size:13px;">${m.text}</span></div>
+                    <span style="font-size:11px; color:var(--text-muted);">${m.time}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderProfile() {
+            const u = db.users[currentUser.username];
+            document.getElementById('profAvatar').src = u.avatar;
+            document.getElementById('profFullName').innerHTML = `${u.name} ${u.verified ? '<i class="fa-solid fa-circle-check verified-badge"></i>' : ''}`;
+            document.getElementById('profUsername').innerText = `@${u.username}`;
+            document.getElementById('statFollowers').innerText = u.followers.toLocaleString();
+            document.getElementById('statFollowing').innerText = u.following.toLocaleString();
+        }
+
+        function populateAdminUsers() {
+            document.getElementById('adminUserSelect').innerHTML = Object.keys(db.users).map(k => `<option value="${k}">${db.users[k].name} (@${k})</option>`).join('');
+            document.getElementById('adminSystemUserList').innerHTML = Object.keys(db.users).map(k => `
+                <div class="user-row">
+                    <div><strong>${db.users[k].name}</strong> <span style="font-size:11px; color:var(--text-muted);">(@${k})</span></div>
+                    <span>${db.users[k].verified ? '✅ Mavi Tik' : '❌ Adi'}</span>
+                </div>
+            `).join('');
+            loadUserMetaToAdmin();
+        }
+
+        function loadUserMetaToAdmin() {
+            const u = db.users[document.getElementById('adminUserSelect').value];
+            if(u) {
+                document.getElementById('adminVerification').value = u.verified ? "true" : "false";
+                document.getElementById('adminFollowerCount').value = u.followers;
+                document.getElementById('adminFollowingCount').value = u.following;
+            }
+        }
+
+        function saveAdminModifications() {
+            const key = document.getElementById('adminUserSelect').value;
+            if(db.users[key]) {
+                db.users[key].verified = document.getElementById('adminVerification').value === "true";
+                db.users[key].followers = parseInt(document.getElementById('adminFollowerCount').value) || 0;
+                db.users[key].following = parseInt(document.getElementById('adminFollowingCount').value) || 0;
+                saveDB(); hydrateApp(); alert("Sistem sinxronizasiya olundu!");
+            }
+        }
+
+        function logout() { sessionStorage.removeItem('nexa_session'); window.location.reload(); }
     </script>
 </body>
 </html>
