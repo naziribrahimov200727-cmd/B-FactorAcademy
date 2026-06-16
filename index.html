@@ -2,92 +2,77 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXA - Azərbaycanın Rəqəmsal Evi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXA - Giriş və Qeydiyyat</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
     <style>
-        :root { --bg-dark: #030712; --surface-dark: #0b1329; --surface-card: #111c44; --accent-blue: #3b82f6; --text-main: #f3f4f6; --text-muted: #9ca3af; --border-color: rgba(59, 130, 246, 0.2); --neon-glow: 0 0 15px rgba(59, 130, 246, 0.4); }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
-        .app-container { display: flex; height: 100vh; width: 100vw; }
-        .auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .auth-card { background: var(--surface-dark); border: 1px solid var(--border-color); width: 100%; max-width: 380px; border-radius: 24px; padding: 30px; text-align: center; }
-        .form-group { margin-bottom: 15px; }
-        .form-group input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; color: white; }
-        .admin-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; cursor: pointer; font-weight: 600; }
-        .hidden { display: none !important; }
-        .app-screen { display: none; height: 100%; overflow-y: auto; width: 100%; }
-        .app-screen.active { display: block; }
+        body { background: #030712; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { width: 90%; max-width: 320px; background: #0b1329; padding: 25px; border-radius: 20px; border: 1px solid #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #111c44; border: 1px solid #3b82f6; color: white; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #3b82f6; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="authScreen" class="auth-overlay">
-        <div class="auth-card">
-            <h2>NEXA</h2>
-            <div id="loginForm">
-                <div class="form-group"><input type="text" id="loginUser" placeholder="İstifadəçi adı"></div>
-                <div class="form-group"><input type="password" id="loginPass" placeholder="Şifrə"></div>
-                <button class="admin-btn" onclick="handleLogin()" style="background: var(--accent-blue);">Giriş Et</button>
-                <p style="margin-top:15px; cursor:pointer;" onclick="toggleAuthForms()">Hesabın yoxdur? Qeydiyyat</p>
-            </div>
-            <div id="registerForm" class="hidden">
-                <div class="form-group"><input type="text" id="regUser" placeholder="İstifadəçi adı"></div>
-                <div class="form-group"><input type="text" id="regName" placeholder="Ad Soyad"></div>
-                <div class="form-group"><input type="password" id="regPass" placeholder="Şifrə"></div>
-                <button class="admin-btn" onclick="handleRegister()" style="background: #10b981;">Qeydiyyatı Tamamla</button>
-                <p style="margin-top:15px; cursor:pointer;" onclick="toggleAuthForms()">Hesabın var? Giriş</p>
-            </div>
-        </div>
-    </div>
+<div class="box">
+    <h2 id="title" style="text-align:center;">Giriş</h2>
+    <input type="text" id="user" placeholder="İstifadəçi adı">
+    <input type="password" id="pass" placeholder="Şifrə">
+    <button onclick="authAction()" id="btn">Daxil ol</button>
+    <p onclick="toggleMode()" style="font-size: 13px; cursor: pointer; color: #3b82f6; text-align: center; margin-top: 15px;">Qeydiyyatdan keç</p>
+</div>
 
-    <div class="app-container">
-        <main class="main-content" style="width:100%; padding: 20px;">
-            <div id="feed-screen" class="app-screen active">
-                <h1>Xoş gəlmisiniz, <span id="userNameDisplay"></span></h1>
-                <button onclick="logout()">Çıxış</button>
-            </div>
-        </main>
-    </div>
+<script>
+    // Sənin Firebase konfiqurasiyan
+    const firebaseConfig = {
+        apiKey: "AIzaSyAWFpGs1CCKLQ3NL45o81nPCMuKRqLgJHM",
+        authDomain: "nexa-51c08.firebaseapp.com",
+        databaseURL: "https://nexa-51c08-default-rtdb.firebaseio.com",
+        projectId: "nexa-51c08",
+        storageBucket: "nexa-51c08.firebasestorage.app",
+        messagingSenderId: "124010138329",
+        appId: "1:124010138329:web:8c73c87483f2e28a5d8cc8"
+    };
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    // Firebase-i işə sal
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAWFpGs1CCKLQ3NL45o81nPCMuKRqLgJHM",
-            databaseURL: "https://nexa-51c08-default-rtdb.firebaseio.com"
-        };
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+    let isLogin = true;
 
-        // Funksiyalar
-        window.toggleAuthForms = () => {
-            document.getElementById('loginForm').classList.toggle('hidden');
-            document.getElementById('registerForm').classList.toggle('hidden');
-        };
+    function toggleMode() {
+        isLogin = !isLogin;
+        document.getElementById('title').innerText = isLogin ? "Giriş" : "Qeydiyyat";
+        document.getElementById('btn').innerText = isLogin ? "Daxil ol" : "Qeydiyyatı tamamla";
+    }
 
-        window.handleRegister = async () => {
-            const user = document.getElementById('regUser').value.trim().toLowerCase();
-            const name = document.getElementById('regName').value.trim();
-            const pass = document.getElementById('regPass').value;
-            
-            if(!user || !name || !pass) return alert('Boş xana qoymayın!');
-            
-            try {
-                const snapshot = await get(child(ref(database), 'users/' + user));
-                if(snapshot.exists()) return alert('İstifadəçi artıq mövcuddur!');
-                
-                await set(ref(database, 'users/' + user), { username: user, name: name, pass: pass });
-                alert('Qeydiyyat uğurludur!');
-                toggleAuthForms();
-            } catch(e) { alert('Xəta: ' + e.message); }
-        };
+    function authAction() {
+        const u = document.getElementById('user').value.trim();
+        const p = document.getElementById('pass').value;
+        if(!u || !p) return alert("Boş xana qoymayın!");
+        
+        const userRef = db.ref('users/' + u);
 
-        window.handleLogin = async () => {
-            const user = document.getElementById('loginUser').value.trim().toLowerCase();
-            const pass = document.getElementById('loginPass').value;
-            
-            try {
-                const snapshot = await get(child(ref(database), 'users
+        if (!isLogin) {
+            // Qeydiyyat
+            userRef.set({ pass: p }).then(() => {
+                alert("Qeydiyyat uğurludur!");
+                toggleMode();
+            }).catch(e => alert("Xəta: " + e.message));
+        } else {
+            // Giriş
+            userRef.once('value').then((snap) => {
+                if (snap.exists() && snap.val().pass === p) {
+                    alert("Xoş gəldin, " + u + "!");
+                } else {
+                    alert("İstifadəçi adı və ya şifrə yanlışdır!");
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>
