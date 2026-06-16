@@ -1,398 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="az">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B-FACTOR ACADEMY</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* Base Styles & Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexa v1</title>
 
-        :root {
-            --primary-color: #00bcd4; /* Neon Cyan */
-            --dark-bg: #0f172a;
-            --card-bg: #1e293b;
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
-        }
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0f0f0f;color:white}
 
-        body {
-            background-color: var(--dark-bg);
-            color: var(--text-light);
-            line-height: 1.6;
-            scroll-behavior: smooth;
-        }
+/* LOGIN */
+.login{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  gap:10px;
+}
+.login-box{
+  background:#1c1c1c;
+  padding:30px;
+  border-radius:15px;
+  width:300px;
+}
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:none;
+  border-radius:8px;
+}
+button{
+  width:100%;
+  padding:10px;
+  background:#ff2d55;
+  border:none;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+}
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.5rem 0;
-        }
+/* APP */
+.app{display:none}
 
-        /* Grids for Mobile Default */
-        .grid-2, .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
+/* TOP BAR */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  background:#151515;
+  position:sticky;
+  top:0;
+}
 
-        /* Header / Navigation */
-        header {
-            background-color: rgba(15, 23, 42, 0.95);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid #1e293b;
-            backdrop-filter: blur(10px);
-        }
+/* STORIES */
+.stories{
+  display:flex;
+  gap:10px;
+  padding:10px;
+  overflow-x:auto;
+}
+.story{
+  min-width:60px;
+  text-align:center;
+}
+.story-circle{
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  border:2px solid #ff2d55;
+}
 
-        header .container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            align-items: center;
-            text-align: center;
-            padding: 0.8rem 0;
-        }
+/* POST */
+.post{
+  background:#1c1c1c;
+  margin:10px;
+  border-radius:10px;
+  overflow:hidden;
+}
+.post img{
+  width:100%;
+}
+.post-info{
+  padding:10px;
+}
 
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-        }
+/* POST CREATE */
+.create-post{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#ff2d55;
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:30px;
+  cursor:pointer;
+}
 
-        .logo span {
-            color: var(--primary-color);
-        }
-
-        nav {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--primary-color);
-        }
-
-        .btn-nav {
-            background-color: var(--primary-color);
-            color: var(--dark-bg) !important;
-            padding: 0.4rem 0.8rem;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 10rem 0 4rem 0;
-            text-align: center;
-            background: linear-gradient(to bottom, rgba(0, 188, 212, 0.1), transparent);
-        }
-
-        .hero h1 {
-            font-size: 2.2rem;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            color: var(--text-muted);
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            padding: 0 10px;
-        }
-
-        .btn-primary {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--dark-bg);
-            padding: 0.8rem 2rem;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: transform 0.2s;
-            width: 85%;
-            max-width: 300px;
-        }
-
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
-
-        /* About Section */
-        .about {
-            text-align: center;
-            padding: 3rem 0;
-        }
-
-        .about h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .about p {
-            font-size: 1rem;
-            color: var(--text-muted);
-            text-align: justify;
-            text-align-last: center;
-        }
-
-        /* Stats Section */
-        .stats {
-            background-color: var(--card-bg);
-            padding: 3rem 0;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .stat-card {
-            padding: 1rem;
-        }
-
-        .stat-card i {
-            font-size: 2.2rem;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .stat-card p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* Team Section */
-        .team {
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        .team h2 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .team-card {
-            background-color: var(--card-bg);
-            padding: 2rem 1rem;
-            border-radius: 10px;
-            border: 1px solid #2e3e56;
-        }
-
-        .avatar {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 0.8rem;
-        }
-
-        .team-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .team-card p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .instagram-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #e1306c;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            border: 1px solid rgba(225, 48, 108, 0.3);
-            border-radius: 20px;
-            background-color: rgba(225, 48, 108, 0.05);
-        }
-
-        /* Registration Section */
-        .register {
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        .form-container {
-            background-color: var(--card-bg);
-            padding: 3rem 1.5rem;
-            border-radius: 10px;
-            width: 100%;
-        }
-
-        .form-container h2 {
-            font-size: 1.6rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .form-container p {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem 0;
-            border-top: 1px solid #1e293b;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        /* Responsive Desktop styles */
-        @media (min-width: 768px) {
-            .container {
-                width: 85%;
-            }
-            header .container {
-                flex-direction: row;
-                justify-content: space-between;
-                padding: 1rem 0;
-            }
-            nav {
-                gap: 1.5rem;
-            }
-            nav a {
-                font-size: 1rem;
-            }
-            .grid-2 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .grid-3 {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .hero {
-                padding: 12rem 0 6rem 0;
-            }
-            .hero h1 {
-                font-size: 3rem;
-            }
-            .form-container {
-                max-width: 600px;
-                padding: 3rem;
-            }
-        }
-    </style>
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  justify-content:center;
+  align-items:center;
+}
+.modal-content{
+  background:#1c1c1c;
+  padding:20px;
+  width:300px;
+  border-radius:10px;
+}
+</style>
 </head>
+
 <body>
 
-    <header>
-        <div class="container">
-            <div class="logo">B-FACTOR <span>ACADEMY</span></div>
-            <nav>
-                <a href="#about">About</a>
-                <a href="#stats">Stats</a>
-                <a href="#team">Admins</a>
-                <a href="#register" class="btn-nav">Register</a>
-            </nav>
-        </div>
-    </header>
+<!-- LOGIN -->
+<div class="login" id="login">
+  <div class="login-box">
+    <h2>Nexa Login</h2>
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <button onclick="login()">Daxil ol</button>
+  </div>
+</div>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Unlock Your Potential With B-FACTOR</h1>
-            <p>Empowering the next generation of digital entrepreneurs and professionals.</p>
-            <a href="https://t.me/BFactorAcademy_bot" target="_blank" class="btn-primary">Get Started Now</a>
-        </div>
-    </section>
+<!-- APP -->
+<div class="app" id="app">
 
-    <section id="about" class="about">
-        <div class="container">
-            <h2>About Us</h2>
-            <p><strong>B-FACTOR ACADEMY</strong> was founded in 2026 by <strong>Nazir Ibrahimov and Arif Bagirov</strong>.</p>
-        </div>
-    </section>
+  <div class="topbar">
+    <h2>NEXA</h2>
+    <span>🔔</span>
+  </div>
 
-    <section id="stats" class="stats">
-        <div class="container grid-3">
-            <div class="stat-card">
-                <i class="fa-solid fa-users-viewfinder"></i>
-                <h3>1,240+</h3>
-                <p>Active Users</p>
-            </div>
-            <div class="stat-card">
-                <i class="fa-solid fa-graduation-cap"></i>
-                <h3>480+</h3>
-                <p>Graduates</p>
-            </div>
-            <div class="stat-card">
-                <i class="fa-solid fa-award"></i>
-                <h3>100%</h3>
-                <p>Satisfaction</p>
-            </div>
-        </div>
-    </section>
+  <!-- STORIES -->
+  <div class="stories">
+    <div class="story"><div class="story-circle"></div><small>Ali</small></div>
+    <div class="story"><div class="story-circle"></div><small>Veli</small></div>
+    <div class="story"><div class="story-circle"></div><small>Nigar</small></div>
+    <div class="story"><div class="story-circle"></div><small>Elvin</small></div>
+  </div>
 
-    <section id="team" class="team">
-        <div class="container">
-            <h2>Meet Our Admins</h2>
-            <div class="grid-2">
-                <div class="team-card">
-                    <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
-                    <h3>Nazir Ibrahimov</h3>
-                    <p>Co-Founder</p>
-                    <a href="https://instagram.com/27.nazir" target="_blank" class="instagram-link">
-                        <i class="fa-brands fa-instagram"></i> @27.nazir
-                    </a>
-                </div>
-                <div class="team-card">
-                    <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
-                    <h3>Arif Bagirov</h3>
-                    <p>Tech Lead</p>
-                    <a href="https://instagram.com/arifbagiroff" target="_blank" class="instagram-link">
-                        <i class="fa-brands fa-instagram"></i> @arifbagiroff
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- POSTS -->
+  <div id="feed">
+    <div class="post">
+      <img src="https://picsum.photos/400/300" />
+      <div class="post-info">
+        <b>nexa_user</b>
+        <p>First post on Nexa 🚀</p>
+      </div>
+    </div>
+  </div>
 
-    <section id="register" class="register">
-        <div class="container form-container">
-            <h2>Join B-FACTOR ACADEMY</h2>
-            <p>Click below to register via Telegram bot.</p>
-            <a href="https://t.me/BFactorAcademy_bot" target="_blank" class="btn-primary">Open Telegram Bot</a>
-        </div>
-    </section>
+</div>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 B-FACTOR ACADEMY</p>
-        </div>
-    </footer>
+<!-- CREATE POST -->
+<div class="create-post" onclick="openModal()">+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>Post yarat</h3>
+    <input id="caption" placeholder="Caption">
+    <input id="img" placeholder="Image URL">
+    <button onclick="addPost()">Paylaş</button>
+    <button onclick="closeModal()" style="margin-top:10px;background:#333;">Bağla</button>
+  </div>
+</div>
+
+<script>
+function login(){
+  document.getElementById("login").style.display="none";
+  document.getElementById("app").style.display="block";
+}
+
+function openModal(){
+  document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+}
+
+function addPost(){
+  let caption=document.getElementById("caption").value;
+  let img=document.getElementById("img").value;
+
+  if(!img) img="https://picsum.photos/400/300";
+
+  let post=document.createElement("div");
+  post.className="post";
+  post.innerHTML=`
+    <img src="${img}">
+    <div class="post-info">
+      <b>sən</b>
+      <p>${caption}</p>
+    </div>
+  `;
+
+  document.getElementById("feed").prepend(post);
+
+  closeModal();
+}
+</script>
 
 </body>
 </html>
