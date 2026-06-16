@@ -3,65 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa | Official</title>
+    <title>Nexa | Rəqəmsal Ev</title>
     <style>
-        :root { --bg: #000; --nav: #000; --text: #fff; --border: #262626; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        :root { --bg: #000; --accent: #ff0050; --border: #333; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
+        .view { display: none; padding: 15px; }
+        .active { display: block; }
         
-        /* Üst Navbar */
-        .top-nav { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
-        .logo { font-family: cursive; font-size: 24px; font-weight: bold; }
+        /* Post Dizaynı (image.png-dən ilhamlanaraq) */
+        .post { background: #111; border-radius: 15px; padding: 15px; margin-bottom: 20px; }
+        .user-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #444; }
+        .post-media { width: 100%; height: 250px; background: #222; border-radius: 10px; }
 
-        /* Story */
-        .story-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid var(--border); }
-        .story-item { text-align: center; font-size: 12px; }
-        .story-img { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #f00; padding: 2px; }
-
-        /* Post */
-        .post { max-width: 470px; margin: 0 auto 20px; }
-        .post-header { display: flex; align-items: center; padding: 10px; gap: 10px; }
-        .user-pic { width: 32px; height: 32px; background: #333; border-radius: 50%; }
-        .post-img { width: 100%; aspect-ratio: 1/1; background: #1a1a1a; }
-        .post-actions { padding: 10px; display: flex; gap: 15px; font-size: 24px; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--border); }
+        /* Navigasiya */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 15px 0; }
+        .btn { padding: 10px 20px; background: var(--accent); border: none; color: white; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <nav class="top-nav">
-        <div class="logo">Nexa</div>
-        <div style="font-size: 24px;">♥</div>
-    </nav>
-
-    <!-- Stories -->
-    <div class="story-bar">
-        <div class="story-item"><div class="story-img" style="background:#555"></div>Sən</div>
-        <div class="story-item"><div class="story-img" style="background:#888"></div>Ayhan</div>
-        <div class="story-item"><div class="story-img" style="background:#aaa"></div>Könül</div>
+    <!-- Ana Səhifə (Feed) -->
+    <div id="home" class="view active">
+        <h2>Ana Səhifə</h2>
+        <div class="post">
+            <div class="user-header"><div class="avatar"></div><strong>Aylin_97</strong></div>
+            <div class="post-media"></div>
+            <p>Bakının gözəlliyi ✨🇦🇿</p>
+        </div>
     </div>
 
-    <!-- Feed -->
-    <div id="feed">
-        <article class="post">
-            <div class="post-header">
-                <div class="user-pic"></div>
-                <strong>Nexa_Official</strong>
-            </div>
-            <div class="post-img"></div>
-            <div class="post-actions">
-                <span>♥</span> <span>💬</span> <span>✈</span>
-            </div>
-            <div style="padding: 0 10px;"><strong>Nexa_Official</strong> Nexa dünyasına xoş gəldiniz! 🚀</div>
-        </article>
+    <!-- Axtarış -->
+    <div id="search" class="view">
+        <h2>Axtarış</h2>
+        <input type="text" placeholder="İnsanları axtar..." style="width: 100%; padding: 10px; border-radius: 5px;">
     </div>
 
-    <!-- Bottom Nav -->
+    <!-- Profil -->
+    <div id="profile" class="view">
+        <div style="text-align:center;">
+            <div class="avatar" style="width:100px; height:100px; margin:auto;"></div>
+            <h1>İstifadəçi Adı</h1>
+            <button class="btn" onclick="alert('Dostluq istəyi göndərildi!')">Dostluq At</button>
+        </div>
+    </div>
+
+    <!-- Mesajlar -->
+    <div id="messages" class="view">
+        <h2>Mesajlar</h2>
+        <div style="padding:10px; border-bottom:1px solid #333;">Könül: Salam, necəsən?</div>
+        <div style="padding:10px; border-bottom:1px solid #333;">Ayhan: Videonu gördün?</div>
+    </div>
+
+    <!-- Navigasiya -->
     <nav class="bottom-nav">
-        <span>🏠</span> <span>🔍</span> <span>➕</span> <span>⚡</span> <span>👤</span>
+        <span onclick="show('home')">🏠</span>
+        <span onclick="show('search')">🔍</span>
+        <span onclick="show('profile')">👤</span>
+        <span onclick="show('messages')">💬</span>
     </nav>
 
+    <script>
+        function show(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+    </script>
 </body>
 </html>
