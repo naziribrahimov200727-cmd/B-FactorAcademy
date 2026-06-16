@@ -3,115 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa | Premium Experience</title>
+    <title>Nexa | Official</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        :root { --bg: #000; --nav: #000; --text: #fff; --border: #262626; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        
+        /* Üst Navbar */
+        .top-nav { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
+        .logo { font-family: cursive; font-size: 24px; font-weight: bold; }
 
-        :root {
-            --bg: #050505;
-            --glass: rgba(255, 255, 255, 0.05);
-            --accent: #ff0050;
-            --text: #ffffff;
-        }
+        /* Story */
+        .story-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid var(--border); }
+        .story-item { text-align: center; font-size: 12px; }
+        .story-img { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #f00; padding: 2px; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            overflow-x: hidden;
-        }
+        /* Post */
+        .post { max-width: 470px; margin: 0 auto 20px; }
+        .post-header { display: flex; align-items: center; padding: 10px; gap: 10px; }
+        .user-pic { width: 32px; height: 32px; background: #333; border-radius: 50%; }
+        .post-img { width: 100%; aspect-ratio: 1/1; background: #1a1a1a; }
+        .post-actions { padding: 10px; display: flex; gap: 15px; font-size: 24px; }
 
-        /* Üst Panel */
-        header {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        /* Post Stili */
-        .feed-container { max-width: 420px; margin: auto; padding: 10px; }
-        .post-card {
-            background: var(--glass);
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .media-placeholder {
-            width: 100%;
-            height: 350px;
-            background: linear-gradient(45deg, #1a1a1a, #0f0f0f);
-            border-radius: 15px;
-            margin: 10px 0;
-        }
-
-        /* Navigasiya */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(20px);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .icon { font-size: 24px; cursor: pointer; transition: 0.3s; }
-        .icon:hover { color: var(--accent); transform: scale(1.2); }
-
-        /* Reels Rejimi */
-        .reels-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
-        .reel-slide { height: 100vh; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; background: #000; }
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
 
-    <header>
-        <h2 style="margin:0; font-weight: 600; letter-spacing: -1px;">Nexa</h2>
-        <div style="background: var(--accent); padding: 8px 15px; border-radius: 12px; font-size: 12px;">YENİ</div>
-    </header>
-
-    <div id="main-view" class="feed-container">
-        <!-- Postlar -->
-        <div class="post-card">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:35px; height:35px; background:#333; border-radius:50%;"></div>
-                <strong>istifadəçi_adi</strong>
-            </div>
-            <div class="media-placeholder"></div>
-            <p style="font-size: 14px; color: #aaa;">Bu, Nexa-nın premium görünüşüdür. ✨</p>
-        </div>
-    </div>
-
-    <nav class="nav-bar">
-        <div class="icon" onclick="render('feed')">🏠</div>
-        <div class="icon" onclick="render('explore')">🔍</div>
-        <div class="icon" onclick="render('reels')">⚡</div>
-        <div class="icon">👤</div>
+    <!-- Header -->
+    <nav class="top-nav">
+        <div class="logo">Nexa</div>
+        <div style="font-size: 24px;">♥</div>
     </nav>
 
-    <script>
-        function render(page) {
-            const container = document.getElementById('main-view');
-            if(page === 'reels') {
-                container.className = 'reels-container';
-                container.innerHTML = `
-                    <div class="reel-slide">Reels Məzmunu 1</div>
-                    <div class="reel-slide">Reels Məzmunu 2</div>
-                `;
-            } else {
-                container.className = 'feed-container';
-                container.innerHTML = '<h2>' + page.toUpperCase() + '</h2><p>Premium interfeys aktivdir.</p>';
-            }
-        }
-    </script>
+    <!-- Stories -->
+    <div class="story-bar">
+        <div class="story-item"><div class="story-img" style="background:#555"></div>Sən</div>
+        <div class="story-item"><div class="story-img" style="background:#888"></div>Ayhan</div>
+        <div class="story-item"><div class="story-img" style="background:#aaa"></div>Könül</div>
+    </div>
+
+    <!-- Feed -->
+    <div id="feed">
+        <article class="post">
+            <div class="post-header">
+                <div class="user-pic"></div>
+                <strong>Nexa_Official</strong>
+            </div>
+            <div class="post-img"></div>
+            <div class="post-actions">
+                <span>♥</span> <span>💬</span> <span>✈</span>
+            </div>
+            <div style="padding: 0 10px;"><strong>Nexa_Official</strong> Nexa dünyasına xoş gəldiniz! 🚀</div>
+        </article>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <span>🏠</span> <span>🔍</span> <span>➕</span> <span>⚡</span> <span>👤</span>
+    </nav>
+
 </body>
 </html>
